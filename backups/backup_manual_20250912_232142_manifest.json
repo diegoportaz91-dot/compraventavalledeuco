@@ -1,0 +1,11 @@
+{
+  "backup_date": "2025-09-12T23:21:42.088529",
+  "backup_type": "manual",
+  "files_backed_up": 0,
+  "total_size": 7225804,
+  "database_hash": null,
+  "success": false,
+  "errors": [
+    "Error en backup de base de datos"
+  ]
+}

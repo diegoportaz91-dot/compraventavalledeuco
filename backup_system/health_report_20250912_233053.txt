@@ -1,0 +1,15 @@
+
+[OK] REPORTE DE SALUD DEL SISTEMA DE BACKUP
+========================================
+
+Estado General: HEALTHY
+Fecha: 2025-09-12T23:30:53.131697
+
+INFORMACION:
+  - Último backup: 2025-09-12 23:21:42
+  - Espacio libre: 23.0 GB
+  - Tareas activas: 4/4
+
+RECOMENDACIONES:
+  - Sistema funcionando correctamente
+  - Continuar con monitoreo regular
