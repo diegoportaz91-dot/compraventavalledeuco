@@ -1,0 +1,1186 @@
+{% extends "base.html" %}
+
+{% block title %}Usuarios y Vehículos - Panel Administrativo{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+    {% include 'admin_sidebar.html' %}
+    
+    <div class="admin-content">
+        <div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-6 fw-bold">
+                        <i class="fas fa-users me-3 text-primary"></i>Usuarios y Vehículos
+                    </h1>
+                    <p class="text-muted">Gestiona usuarios y el estado de sus publicaciones</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="searchInput" 
+                                       placeholder="Buscar por nombre, teléfono, vehículo, marca, modelo...">
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <button class="btn btn-outline-secondary" id="clearSearch">
+                                <i class="fas fa-times me-2"></i>Limpiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if owners %}
+        <!-- Users and Vehicles List -->
+        {% for owner_name, owner_data in owners.items() %}
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="mb-0">
+                                <i class="fas fa-user me-2"></i>{{ owner_data.client_data.full_name }}{% if owner_data.client_data.dni %} ({{ owner_data.client_data.dni }}){% endif %}
+                            </h5>
+                            <small>
+                                <i class="fas fa-phone me-1"></i>{{ owner_data.client_data.phone_number }} |
+                                <i class="fas fa-map-marker-alt me-1"></i>{{ owner_data.client_data.location }}
+                                {% if owner_data.client_data.address %}
+                                    | {{ owner_data.client_data.address }}
+                                {% endif %}
+                            </small>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <span class="badge bg-light text-dark fs-6">
+                                {{ owner_data.vehicles|length }} vehículo{{ 's' if owner_data.vehicles|length != 1 else '' }}
+                            </span>
+                            <button type="button" class="btn btn-outline-light btn-sm me-2" 
+                                    data-user-id="{{ owner_data.client_data.id }}"
+                                    data-user-name="{{ owner_data.client_data.full_name }}"
+                                    data-user-phone="{{ owner_data.client_data.phone_number }}"
+                                    data-user-location="{{ owner_data.client_data.location }}"
+                                    data-user-address="{{ owner_data.client_data.address or '' }}"
+                                    data-user-email="{{ owner_data.client_data.email or '' }}"
+                                    data-user-dni="{{ owner_data.client_data.dni or '' }}"
+                                    onclick="editUser(this)">
+                                <i class="fas fa-edit me-1"></i>Editar
+                            </button>
+                            <a href="{{ owner_data.client_data.get_whatsapp_contact_url() }}" 
+                               target="_blank" 
+                               class="btn btn-success btn-sm">
+                                <i class="fab fa-whatsapp me-1"></i>WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Vehículo</th>
+                                    <th>Precio</th>
+                                    <th>Tipo</th>
+                                    <th>Estado</th>
+                                    <th>Duración Premium</th>
+                                    <th>Fecha</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for vehicle in owner_data.vehicles %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                {% if vehicle.is_plus %}
+                                                    {% if vehicle.get_main_image() %}
+                                                        <img src="{{ vehicle.get_main_image() }}" 
+                                                             class="rounded me-3" 
+                                                             style="width: 60px; height: 45px; object-fit: cover;"
+                                                             alt="{{ vehicle.title }}"
+                                                             onerror="handleImageError(this)">
+                                                    {% else %}
+                                                        <div class="rounded me-3 d-flex align-items-center justify-content-center bg-light border" 
+                                                             style="width: 60px; height: 45px;">
+                                                            <i class="fas fa-car text-muted"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <!-- Free plan: show car silhouette -->
+                                                    <img src="{{ url_for('static', filename='placeholder-car.png') }}" 
+                                                         class="rounded me-3" 
+                                                         style="width: 60px; height: 45px; object-fit: contain; background-color: #f8f9fa;"
+                                                         alt="{{ vehicle.title }}"
+                                                         onerror="handleImageError(this)">
+                                                {% endif %}
+                                                <div>
+                                                    <h6 class="mb-1">{{ vehicle.title }}</h6>
+                                                    {% if vehicle.year or vehicle.brand %}
+                                                        <small class="text-muted">
+                                                            {% if vehicle.year %}{{ vehicle.year }}{% endif %}
+                                                            {% if vehicle.brand %} {{ vehicle.brand }}{% endif %}
+                                                            {% if vehicle.model %} {{ vehicle.model }}{% endif %}
+                                                        </small>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="fw-bold {{ vehicle.get_currency_class() }}">
+                                                {{ vehicle.format_price_with_currency() }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if vehicle.is_plus %}
+                                                <span class="badge bg-warning text-dark">
+                                                    <i class="fas fa-star me-1"></i>Plus
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">
+                                                    <i class="fas fa-tag me-1"></i>Gratuito
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm {% if vehicle.is_active %}btn-success{% else %}btn-danger{% endif %} border-0 toggle-vehicle-status"
+                                                    data-vehicle-id="{{ vehicle.id }}"
+                                                    data-is-active="{{ vehicle.is_active|tojson }}"
+                                                    style="cursor: pointer; min-width: 90px;">
+                                                <i class="fas {% if vehicle.is_active %}fa-eye{% else %}fa-eye-slash{% endif %} me-1"></i>
+                                                {% if vehicle.is_active %}Activo{% else %}Pausado{% endif %}
+                                            </button>
+                                        </td>
+                                        <td>
+                                            {% if vehicle.is_plus %}
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <select class="form-select form-select-sm" 
+                                                            style="width: 80px;" 
+                                                            onchange="updatePremiumDuration('{{ vehicle.id }}', this.value)">
+                                                        {% for i in range(1, 13) %}
+                                                            <option value="{{ i }}" 
+                                                                    {% if vehicle.premium_duration_months == i %}selected{% endif %}>
+                                                                {{ i }}m
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <div class="text-center">
+                                                        {% if vehicle.premium_expires_at %}
+                                                            {% set days_left = (vehicle.premium_expires_at - now).days %}
+                                                            {% if days_left > 0 %}
+                                                                <small class="text-success d-block">{{ days_left }}d</small>
+                                                            {% else %}
+                                                                <small class="text-danger d-block">Expirado</small>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                        <small class="text-muted" id="time-counter-{{ vehicle.id }}">
+                                                            <i class="fas fa-clock me-1"></i>
+                                                            <span class="time-display" data-created="{{ vehicle.created_at.isoformat() }}">
+                                                                Cargando...
+                                                            </span>
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                <div class="text-center">
+                                                    <span class="text-muted">-</span>
+                                                    <small class="text-muted d-block" id="time-counter-{{ vehicle.id }}">
+                                                        <i class="fas fa-clock me-1"></i>
+                                                        <span class="time-display" data-created="{{ vehicle.created_at.isoformat() }}">
+                                                            Cargando...
+                                                        </span>
+                                                    </small>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">{{ vehicle.created_at.strftime('%d/%m/%Y') }}</small>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="{{ url_for('vehicle_detail', id=vehicle.id) }}" 
+                                                   target="_blank"
+                                                   class="btn btn-outline-primary btn-sm"
+                                                   title="Ver publicación">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ url_for('edit_vehicle', id=vehicle.id) }}" 
+                                                   class="btn btn-outline-info btn-sm"
+                                                   title="Editar vehículo">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="{{ url_for('toggle_vehicle_status', vehicle_id=vehicle.id) }}" 
+                                                   class="btn btn-outline-{% if vehicle.is_active %}warning{% else %}success{% endif %} btn-sm"
+                                                   onclick="return confirm('¿Cambiar el estado de este vehículo?')"
+                                                   title="{% if vehicle.is_active %}Pausar{% else %}Activar{% endif %}">
+                                                    <i class="fas fa-{% if vehicle.is_active %}pause{% else %}play{% endif %}"></i>
+                                                </a>
+                                                <button type="button" 
+                                                        class="btn btn-outline-danger btn-sm delete-vehicle-btn"
+                                                        data-vehicle-id="{{ vehicle.id }}"
+                                                        data-vehicle-name="{{ vehicle.brand }} {{ vehicle.model }}"
+                                                        title="Eliminar vehículo">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <!-- No Users Message -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-users fa-4x text-muted mb-4"></i>
+                        <h4 class="text-muted mb-3">No hay usuarios con vehículos publicados</h4>
+                        <p class="text-muted mb-4">
+                            Cuando se aprueben solicitudes de clientes, sus vehículos aparecerán aquí agrupados por usuario.
+                        </p>
+                        <a href="{{ url_for('admin_pending_requests') }}" class="btn btn-primary">
+                            <i class="fas fa-clock me-2"></i>Ver Solicitudes Pendientes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.table th {
+    border-top: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.btn-group-sm .btn {
+    font-size: 0.8rem;
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.table-responsive {
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.search-highlight {
+    background-color: #fff3cd;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.no-results {
+    display: none;
+}
+</style>
+
+<script>
+// Handle image loading errors
+function handleImageError(img) {
+    img.src = '{{ url_for("static", filename="placeholder-car.png") }}';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const clearSearchBtn = document.getElementById('clearSearch');
+    const userCards = document.querySelectorAll('.card.mb-4');
+    
+    // Search functionality
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        
+        if (searchTerm === '') {
+            // Show all cards
+            userCards.forEach(card => {
+                card.style.display = 'block';
+                removeHighlights(card);
+            });
+            return;
+        }
+        
+        let hasResults = false;
+        
+        userCards.forEach(card => {
+            const cardText = card.textContent.toLowerCase();
+            const matches = cardText.includes(searchTerm);
+            
+            if (matches) {
+                card.style.display = 'block';
+                highlightSearchTerm(card, searchTerm);
+                hasResults = true;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Show/hide no results message
+        showNoResults(!hasResults);
+    });
+    
+    // Clear search
+    clearSearchBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        userCards.forEach(card => {
+            card.style.display = 'block';
+            removeHighlights(card);
+        });
+        showNoResults(false);
+    });
+    
+    function highlightSearchTerm(card, searchTerm) {
+        const textNodes = getTextNodes(card);
+        textNodes.forEach(node => {
+            const text = node.textContent;
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            if (regex.test(text)) {
+                const highlightedText = text.replace(regex, '<span class="search-highlight">$1</span>');
+                const wrapper = document.createElement('span');
+                wrapper.innerHTML = highlightedText;
+                node.parentNode.replaceChild(wrapper, node);
+            }
+        });
+    }
+    
+    function removeHighlights(card) {
+        const highlights = card.querySelectorAll('.search-highlight');
+        highlights.forEach(highlight => {
+            const parent = highlight.parentNode;
+            parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+            parent.normalize();
+        });
+    }
+    
+    function getTextNodes(element) {
+        const textNodes = [];
+        const walker = document.createTreeWalker(
+            element,
+            NodeFilter.SHOW_TEXT,
+            {
+                acceptNode: function(node) {
+                    // Skip text nodes that are inside script or style tags
+                    const parent = node.parentElement;
+                    if (parent && (parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE')) {
+                        return NodeFilter.FILTER_REJECT;
+                    }
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+            }
+        );
+        
+        let node;
+        while (node = walker.nextNode()) {
+            if (node.textContent.trim()) {
+                textNodes.push(node);
+            }
+        }
+        
+        return textNodes;
+    }
+    
+    function showNoResults(show) {
+        let noResultsDiv = document.getElementById('noResultsMessage');
+        
+        if (show && !noResultsDiv) {
+            noResultsDiv = document.createElement('div');
+            noResultsDiv.id = 'noResultsMessage';
+            noResultsDiv.className = 'card';
+            noResultsDiv.innerHTML = `
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-search fa-4x text-muted mb-4"></i>
+                    <h4 class="text-muted mb-3">No se encontraron resultados</h4>
+                    <p class="text-muted mb-4">Intenta con otros términos de búsqueda</p>
+                    <button class="btn btn-outline-secondary" onclick="document.getElementById('searchInput').value=''; document.getElementById('clearSearch').click();">
+                        <i class="fas fa-times me-2"></i>Limpiar búsqueda
+                    </button>
+                </div>
+            `;
+            
+            const container = document.querySelector('.container');
+            container.appendChild(noResultsDiv);
+        } else if (!show && noResultsDiv) {
+            noResultsDiv.remove();
+        }
+    }
+    
+    // Update premium duration
+    function updatePremiumDuration(vehicleId, months) {
+        fetch(`/admin/update-premium-duration/${vehicleId}/${months}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed';
+                alertDiv.style.top = '20px';
+                alertDiv.style.right = '20px';
+                alertDiv.style.zIndex = '9999';
+                alertDiv.innerHTML = `
+                    <i class="fas fa-check me-2"></i>Duración premium actualizada a ${months} meses
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.body.appendChild(alertDiv);
+                
+                // Auto remove after 3 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 3000);
+                
+                // Reload page to show updated data
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } else {
+                alert('Error al actualizar la duración premium');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al actualizar la duración premium');
+        });
+    }
+    
+    // Time counter functionality
+    function updateTimeCounters() {
+        document.querySelectorAll('.time-display').forEach(element => {
+            const createdDate = new Date(element.getAttribute('data-created'));
+            const now = new Date();
+            const diffMs = now - createdDate;
+            
+            const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            
+            let timeString = '';
+            if (days > 0) {
+                timeString += `${days}d `;
+            }
+            if (hours > 0) {
+                timeString += `${hours}h `;
+            }
+            if (minutes > 0) {
+                timeString += `${minutes}m`;
+            }
+            
+            if (timeString === '') {
+                timeString = '0m';
+            }
+            
+            element.textContent = timeString.trim();
+        });
+    }
+    
+    // Update counters immediately and then every minute
+    updateTimeCounters();
+    setInterval(updateTimeCounters, 60000); // Update every minute
+    
+    // Delete vehicle functionality
+    let vehicleToDeleteId = null;
+    
+    // Add event listeners to delete buttons
+    document.querySelectorAll('.delete-vehicle-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const vehicleId = this.getAttribute('data-vehicle-id');
+            const vehicleName = this.getAttribute('data-vehicle-name');
+            confirmDeleteVehicle(vehicleId, vehicleName);
+        });
+    });
+    
+    // Add event listeners to toggle vehicle status buttons
+    document.querySelectorAll('.toggle-vehicle-status').forEach(button => {
+        button.addEventListener('click', function() {
+            const vehicleId = this.getAttribute('data-vehicle-id');
+            const isActive = JSON.parse(this.getAttribute('data-is-active'));
+            toggleVehicleStatus(vehicleId, isActive);
+        });
+    });
+    
+    function confirmDeleteVehicle(vehicleId, vehicleName) {
+        console.log('confirmDeleteVehicle called with:', vehicleId, vehicleName);
+        vehicleToDeleteId = vehicleId;
+        document.getElementById('vehicleToDelete').textContent = vehicleName;
+        const modal = new bootstrap.Modal(document.getElementById('deleteVehicleModal'));
+        modal.show();
+    }
+    
+    // Handle confirm delete button
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+        if (vehicleToDeleteId) {
+            deleteVehicle(vehicleToDeleteId);
+        }
+    });
+    
+    function deleteVehicle(vehicleId) {
+        console.log('deleteVehicle called with:', vehicleId);
+        fetch(`/admin/delete-vehicle/${vehicleId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed';
+                alertDiv.style.top = '20px';
+                alertDiv.style.right = '20px';
+                alertDiv.style.zIndex = '9999';
+                alertDiv.innerHTML = `
+                    <i class="fas fa-check me-2"></i>Vehículo eliminado correctamente
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.body.appendChild(alertDiv);
+                
+                // Auto remove after 3 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 3000);
+                
+                // Close modal and reload page
+                const modal = bootstrap.Modal.getInstance(document.getElementById('deleteVehicleModal'));
+                modal.hide();
+                
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } else {
+                alert('Error al eliminar el vehículo: ' + (data.error || 'Error desconocido'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al eliminar el vehículo');
+        });
+    }
+    
+    // Toggle vehicle status functionality
+    window.toggleVehicleStatus = function(vehicleId, currentStatus) {
+        const newStatus = !currentStatus;
+        const statusText = newStatus ? 'activar' : 'pausar';
+        
+        if (confirm(`¿Estás seguro de que quieres ${statusText} este vehículo?`)) {
+            fetch(`/admin/toggle-vehicle/${vehicleId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed';
+                    alertDiv.style.top = '20px';
+                    alertDiv.style.right = '20px';
+                    alertDiv.style.zIndex = '9999';
+                    alertDiv.innerHTML = `
+                        <i class="fas fa-check me-2"></i>${data.message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    `;
+                    document.body.appendChild(alertDiv);
+                    
+                    // Auto remove after 3 seconds
+                    setTimeout(() => {
+                        if (alertDiv.parentNode) {
+                            alertDiv.remove();
+                        }
+                    }, 3000);
+                    
+                    // Reload page to show updated status
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    alert('Error al cambiar el estado: ' + (data.error || 'Error desconocido'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al cambiar el estado del vehículo');
+            });
+        }
+    };
+});
+
+// Edit User Modal Functions
+function editUser(button) {
+    console.log('DEBUG: editUser function called');
+    const userId = button.getAttribute('data-user-id');
+    const userName = button.getAttribute('data-user-name');
+    const userPhone = button.getAttribute('data-user-phone');
+    const userLocation = button.getAttribute('data-user-location');
+    const userAddress = button.getAttribute('data-user-address');
+    const userEmail = button.getAttribute('data-user-email');
+    const userDni = button.getAttribute('data-user-dni');
+    
+    console.log('DEBUG: User data:', {userId, userName, userPhone, userLocation, userAddress, userEmail, userDni});
+    
+    // Populate modal fields
+    document.getElementById('edit_user_id').value = userId;
+    document.getElementById('edit_full_name').value = userName || '';
+    document.getElementById('edit_phone').value = userPhone || '';
+    document.getElementById('edit_location').value = userLocation || '';
+    document.getElementById('edit_address').value = userAddress || '';
+    document.getElementById('edit_email').value = userEmail || '';
+    document.getElementById('edit_dni').value = userDni || '';
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+    modal.show();
+}
+
+// Handle form submission
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('editUserForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('DEBUG: Form submitted');
+            
+            const formData = new FormData(this);
+            const userId = formData.get('user_id');
+            
+            console.log('DEBUG: Form data:', Object.fromEntries(formData));
+            console.log('DEBUG: User ID:', userId);
+            
+            fetch(`/admin/edit_user/${userId}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                console.log('DEBUG: Response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('DEBUG: Response data:', data);
+                if (data.success) {
+                    alert('Usuario actualizado exitosamente');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al actualizar usuario: ' + error.message);
+            });
+        });
+    }
+});
+</script>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-user-edit me-2"></i>Editar Datos del Usuario
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="editUserForm">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_full_name" class="form-label">
+                                <i class="fas fa-user me-2"></i>Nombre Completo
+                            </label>
+                            <input type="text" class="form-control" id="edit_full_name" name="full_name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_dni" class="form-label">
+                                <i class="fas fa-id-card me-2"></i>DNI
+                            </label>
+                            <input type="text" class="form-control" id="edit_dni" name="dni">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_email" class="form-label">
+                                <i class="fas fa-envelope me-2"></i>Email
+                            </label>
+                            <input type="email" class="form-control" id="edit_email" name="email">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_phone" class="form-label">
+                                <i class="fas fa-phone me-2"></i>Teléfono
+                            </label>
+                            <input type="tel" class="form-control" id="edit_phone" name="phone_number" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edit_location" class="form-label">
+                                <i class="fas fa-map-marker-alt me-2"></i>Ubicación
+                            </label>
+                            <input type="text" class="form-control" id="edit_location" name="location">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="edit_address" class="form-label">
+                                <i class="fas fa-home me-2"></i>Domicilio
+                            </label>
+                            <input type="text" class="form-control" id="edit_address" name="address" placeholder="Calle N° 123, Barrio Centro">
+                        </div>
+                    </div>
+                    <input type="hidden" id="edit_user_id" name="user_id">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmación para Eliminar Vehículo -->
+<div class="modal fade" id="deleteVehicleModal" tabindex="-1" aria-labelledby="deleteVehicleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Eliminación
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3">¿Estás seguro de que quieres eliminar este vehículo?</p>
+                <div class="bg-light p-3 rounded">
+                    <strong id="vehicleToDelete"></strong>
+                </div>
+                <p class="text-muted mt-3">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Se eliminarán todas las imágenes asociadas y la información del vehículo de forma permanente.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                    <i class="fas fa-trash me-2"></i>Eliminar Definitivamente
+                </button>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+
+<!-- Historial Completo de Clientes -->
+<div class="row mt-5">
+    <div class="col-12" style="margin-left: 250px; width: calc(100% - 250px);">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0">
+                            <i class="fas fa-history me-2"></i>Historial Completo de Clientes
+                        </h5>
+                        <small>Registro completo de todos los clientes que han publicado, incluyendo vehículos eliminados</small>
+                    </div>
+                    <button class="btn btn-light btn-sm" onclick="exportClientHistoryToPDF()" title="Exportar a PDF">
+                        <i class="fas fa-file-pdf me-1"></i>Exportar PDF
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if client_history %}
+                    <div style="width: 100%; overflow: hidden;">
+                        <table class="table table-hover table-sm" style="width: 100%; line-height: 1.2; table-layout: fixed;">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 120px;"><i class="fas fa-user me-1"></i>Cliente</th>
+                                    <th style="width: 50px;"><i class="fas fa-id-card me-1"></i>DNI</th>
+                                    <th style="width: 60px;"><i class="fas fa-phone me-1"></i>Contacto</th>
+                                    <th style="width: 30px;"><i class="fas fa-map-marker-alt me-1"></i>Ubicación</th>
+                                    <th style="width: 70px;"><i class="fas fa-car me-1"></i>Vehículos</th>
+                                    <th style="width: 40px;"><i class="fas fa-calendar me-1"></i>Primera Pub.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for client_key, client_info in client_history.items() %}
+                                <tr>
+                                    <td style="padding: 0.5rem;">
+                                        <button class="btn btn-outline-info btn-sm mb-1" 
+                                                onclick="toggleClientDetails('{{ client_key }}')" 
+                                                style="font-size: 0.75rem; padding: 0.2rem 0.4rem;">
+                                            <i class="fas fa-user"></i>
+                                        </button>
+                                        <div style="word-wrap: break-word; overflow-wrap: break-word;">
+                                            <strong style="font-size: 0.85rem;">{{ client_info.client_data.full_name }}</strong>
+                                        </div>
+                                        
+                                        <!-- Datos personales completos (ocultos por defecto) -->
+                                        <div class="client-details mt-1" id="client-details-{{ client_key }}" style="display: none;">
+                                            <div class="card border-info">
+                                                <div class="card-header bg-info text-white py-1">
+                                                    <h6 class="mb-0" style="font-size: 0.8rem;"><i class="fas fa-user me-1"></i>Datos Completos</h6>
+                                                </div>
+                                                <div class="card-body p-2">
+                                                    <div class="row g-1">
+                                                        <div class="col-12 mb-1">
+                                                            <strong class="text-primary" style="font-size: 0.85rem;">{{ client_info.client_data.full_name }}</strong>
+                                                        </div>
+                                                        
+                                                        {% if client_info.client_data.dni %}
+                                                        <div class="col-12">
+                                                            <small class="text-muted" style="font-size: 0.75rem;">
+                                                                <i class="fas fa-id-card me-1"></i>
+                                                                <strong>DNI:</strong> {{ client_info.client_data.dni }}
+                                                            </small>
+                                                        </div>
+                                                        {% endif %}
+                                                        
+                                                        {% if client_info.client_data.whatsapp_number %}
+                                                        <div class="col-12">
+                                                            <small class="text-success" style="font-size: 0.75rem;">
+                                                                <i class="fab fa-whatsapp me-1"></i>
+                                                                <strong>WhatsApp:</strong> {{ client_info.client_data.whatsapp_number }}
+                                                            </small>
+                                                        </div>
+                                                        {% endif %}
+                                                        
+                                                        {% if client_info.client_data.call_number %}
+                                                        <div class="col-12">
+                                                            <small class="text-primary" style="font-size: 0.75rem;">
+                                                                <i class="fas fa-phone me-1"></i>
+                                                                <strong>Teléfono:</strong> {{ client_info.client_data.call_number }}
+                                                            </small>
+                                                        </div>
+                                                        {% endif %}
+                                                        
+                                                        {% if client_info.client_data.phone_number and client_info.client_data.phone_number != client_info.client_data.whatsapp_number and client_info.client_data.phone_number != client_info.client_data.call_number %}
+                                                        <div class="col-12">
+                                                            <small class="text-info" style="font-size: 0.75rem;">
+                                                                <i class="fas fa-mobile-alt me-1"></i>
+                                                                <strong>Tel. Legacy:</strong> {{ client_info.client_data.phone_number }}
+                                                            </small>
+                                                        </div>
+                                                        {% endif %}
+                                                        
+                                                        <div class="col-12">
+                                                            <small class="text-warning" style="font-size: 0.75rem;">
+                                                                <i class="fas fa-map-marker-alt me-1"></i>
+                                                                <strong>Ubicación:</strong> {{ client_info.client_data.location }}
+                                                            </small>
+                                                        </div>
+                                                        
+                                                        {% if client_info.client_data.address %}
+                                                        <div class="col-12">
+                                                            <small class="text-muted" style="font-size: 0.75rem;">
+                                                                <i class="fas fa-home me-1"></i>
+                                                                <strong>Dirección:</strong> {{ client_info.client_data.address }}
+                                                            </small>
+                                                        </div>
+                                                        {% endif %}
+                                                        
+                                                        <div class="col-12 mt-1">
+                                                            <small class="text-muted" style="font-size: 0.75rem;">
+                                                                <i class="fas fa-calendar me-1"></i>
+                                                                <strong>Registro:</strong> {{ client_info.client_data.created_at.strftime('%d/%m/%Y %H:%M') }}
+                                                            </small>
+                                                        </div>
+                                                        
+                                                        {% if client_info.client_data.admin_notes %}
+                                                        <div class="col-12 mt-1">
+                                                            <div class="alert alert-warning py-1 mb-0">
+                                                                <small style="font-size: 0.75rem;">
+                                                                    <i class="fas fa-sticky-note me-1"></i>
+                                                                    <strong>Notas:</strong> {{ client_info.client_data.admin_notes }}
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="padding: 0.5rem;">
+                                        {% if client_info.client_data.dni %}
+                                            <span class="badge bg-secondary" style="font-size: 0.75rem;">{{ client_info.client_data.dni }}</span>
+                                        {% else %}
+                                            <span class="text-muted" style="font-size: 0.75rem;">Sin DNI</span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 0.5rem;">
+                                        {% if client_info.client_data.whatsapp_number %}
+                                            <div class="mb-1">
+                                                <i class="fab fa-whatsapp text-success me-1"></i>
+                                                <small style="font-size: 0.75rem;">{{ client_info.client_data.whatsapp_number }}</small>
+                                            </div>
+                                        {% endif %}
+                                        {% if client_info.client_data.call_number %}
+                                            <div>
+                                                <i class="fas fa-phone text-primary me-1"></i>
+                                                <small style="font-size: 0.75rem;">{{ client_info.client_data.call_number }}</small>
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 0.5rem;">
+                                        <span class="badge bg-primary" style="font-size: 0.75rem;">{{ client_info.client_data.location }}</span>
+                                    </td>
+                                    <td style="padding: 0.5rem;">
+                                        <button class="btn btn-outline-primary btn-sm toggle-vehicles-btn" 
+                                                data-client-key="{{ client_key }}" 
+                                                onclick="toggleVehicleHistory('{{ client_key }}')" 
+                                                style="font-size: 0.75rem; padding: 0.2rem 0.4rem;">
+                                            <i class="fas fa-eye me-1"></i>Ver ({{ client_info.all_requests|length }})
+                                        </button>
+                                        <div class="vehicle-history mt-1" id="vehicles-{{ client_key }}" style="display: none;">
+                                            {% for request in client_info.all_requests %}
+                                                <div class="mb-1 p-1 border rounded bg-light" style="font-size: 0.7rem;">
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <div style="flex: 1; min-width: 0;">
+                                                            <strong class="text-primary" style="font-size: 0.75rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ request.title }}</strong>
+                                                            <small class="text-muted" style="font-size: 0.65rem;">
+                                                                {{ request.brand }} {{ request.model }} 
+                                                                {% if request.year %}({{ request.year }}){% endif %}
+                                                            </small>
+                                                            <br>
+                                                            <small class="text-success fw-bold" style="font-size: 0.65rem;">
+                                                                {% if request.currency == 'ARS' %}
+                                                                    ${{ "{:,}".format(request.price).replace(",", ".") }} ARS
+                                                                {% else %}
+                                                                    ${{ "{:,}".format(request.price).replace(",", ".") }} USD
+                                                                {% endif %}
+                                                            </small>
+                                                            <br>
+                                                            <small class="text-info" style="font-size: 0.6rem;">
+                                                                <i class="fas fa-calendar-plus"></i>
+                                                                {{ request.created_at.strftime('%d/%m/%Y') }}
+                                                            </small>
+                                                            {% if request.status == 'approved' and request.created_vehicle %}
+                                                                {% set vehicle = request.created_vehicle %}
+                                                                {% if not vehicle.is_active %}
+                                                                    <br><small class="text-danger" style="font-size: 0.6rem;">
+                                                                        <i class="fas fa-calendar-times"></i>
+                                                                        {{ vehicle.updated_at.strftime('%d/%m/%Y') }}
+                                                                    </small>
+                                                                {% endif %}
+                                                            {% elif request.status == 'rejected' %}
+                                                                <br><small class="text-warning" style="font-size: 0.6rem;">
+                                                                    <i class="fas fa-times-circle"></i>
+                                                                    {{ request.processed_at.strftime('%d/%m/%Y') if request.processed_at else 'N/A' }}
+                                                                </small>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="text-end" style="flex-shrink: 0; margin-left: 0.5rem;">
+                                                            {% if request.status == 'approved' %}
+                                                                <span class="badge bg-success" style="font-size: 0.6rem;">OK</span>
+                                                            {% elif request.status == 'rejected' %}
+                                                                <span class="badge bg-danger" style="font-size: 0.6rem;">NO</span>
+                                                            {% else %}
+                                                                <span class="badge bg-warning" style="font-size: 0.6rem;">?</span>
+                                                            {% endif %}
+                                                            <br>
+                                                            {% if request.publication_type == 'plus' %}
+                                                                <span class="badge bg-gold text-dark" style="font-size: 0.6rem;">+</span>
+                                                            {% else %}
+                                                                <span class="badge bg-secondary" style="font-size: 0.6rem;">G</span>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                    <td style="padding: 0.5rem;">
+                                        {% set first_request = client_info.all_requests|sort(attribute='created_at')|first %}
+                                        <small class="text-muted" style="font-size: 0.75rem;">
+                                            {{ first_request.created_at.strftime('%d/%m/%Y') }}
+                                        </small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Paginación -->
+                    {% if pagination.pages > 1 %}
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <small class="text-muted">
+                                Mostrando {{ ((pagination.page - 1) * pagination.per_page + 1) }} - 
+                                {{ (pagination.page * pagination.per_page if pagination.page * pagination.per_page <= pagination.total else pagination.total) }} 
+                                de {{ pagination.total }} clientes
+                            </small>
+                        </div>
+                        <nav aria-label="Paginación del historial de clientes">
+                            <ul class="pagination pagination-sm mb-0">
+                                <!-- Botón Anterior -->
+                                {% if pagination.has_prev %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('admin_users_vehicles', page=pagination.prev_num) }}">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </span>
+                                    </li>
+                                {% endif %}
+                                
+                                <!-- Números de página -->
+                                {% for page_num in pagination.page_numbers %}
+                                    {% if page_num == pagination.page %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ page_num }}</span>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('admin_users_vehicles', page=page_num) }}">{{ page_num }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                <!-- Botón Siguiente -->
+                                {% if pagination.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('admin_users_vehicles', page=pagination.next_num) }}">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </span>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                    {% endif %}
+                    
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No hay historial de clientes</h5>
+                        <p class="text-muted">Aún no se han registrado solicitudes de publicación.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleVehicleHistory(clientKey) {
+    const vehicleDiv = document.getElementById('vehicles-' + clientKey);
+    const button = document.querySelector(`[data-client-key="${clientKey}"]`);
+    const icon = button.querySelector('i');
+    
+    if (vehicleDiv.style.display === 'none') {
+        vehicleDiv.style.display = 'block';
+        icon.className = 'fas fa-eye-slash me-1';
+        button.innerHTML = icon.outerHTML + 'Ocultar Vehículos';
+    } else {
+        vehicleDiv.style.display = 'none';
+        icon.className = 'fas fa-eye me-1';
+        const vehicleCount = vehicleDiv.querySelectorAll('.mb-2.p-2.border.rounded.bg-light').length;
+        button.innerHTML = icon.outerHTML + `Ver Vehículos (${vehicleCount})`;
+    }
+}
+
+function toggleClientDetails(clientKey) {
+    const detailsDiv = document.getElementById('client-details-' + clientKey);
+    const button = document.querySelector(`[onclick="toggleClientDetails('${clientKey}')"]`);
+    const icon = button.querySelector('i');
+    
+    if (detailsDiv.style.display === 'none') {
+        detailsDiv.style.display = 'block';
+        icon.className = 'fas fa-user-times me-1';
+        button.innerHTML = icon.outerHTML + 'Ocultar Datos';
+    } else {
+        detailsDiv.style.display = 'none';
+        icon.className = 'fas fa-user me-1';
+        button.innerHTML = icon.outerHTML + 'Ver Datos Completos';
+    }
+}
+
+function exportClientHistoryToPDF() {
+    // Mostrar indicador de carga
+    const button = document.querySelector('[onclick="exportClientHistoryToPDF()"]');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Generando PDF...';
+    button.disabled = true;
+    
+    // Crear formulario para enviar la solicitud
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/admin/export_client_history_pdf';
+    form.style.display = 'none';
+    
+    // Agregar token CSRF si existe
+    const csrfToken = document.querySelector('meta[name="csrf-token"]');
+    if (csrfToken) {
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrf_token';
+        csrfInput.value = csrfToken.getAttribute('content');
+        form.appendChild(csrfInput);
+    }
+    
+    document.body.appendChild(form);
+    form.submit();
+    
+    // Restaurar botón después de un tiempo
+    setTimeout(() => {
+        button.innerHTML = originalText;
+        button.disabled = false;
+        document.body.removeChild(form);
+    }, 3000);
+}
+</script>
+
+{% endblock %}

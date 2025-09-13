@@ -1,0 +1,880 @@
+{% extends "base.html" %}
+
+{% block title %}Solicitar Publicación de Vehículo - AutoMarket Argentina{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-6 fw-bold">
+                        <i class="fas fa-car-side me-3 text-primary"></i>Solicitar Publicación de Vehículo
+                    </h1>
+                    <p class="text-muted">Completa el formulario para solicitar la publicación de tu vehículo</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Volver al Inicio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Information Alert -->
+    <div class="alert alert-info alert-permanent mb-4">
+        <h6 class="alert-heading">
+            <i class="fas fa-info-circle me-2"></i>Información Importante
+        </h6>
+        <ul class="mb-0">
+            <li>Los datos personales son solo para llevar control de cuántos vehículos publicados tiene cada usuario.</li>
+            <li>No necesitas registrarte en la página.</li>
+            <li>Tu solicitud será revisada y te contactaremos por WhatsApp para coordinar la publicación.</li>
+            <li>El administrador puede editar los datos si es necesario antes de publicar.</li>
+            <li>Solo el número telefónico sera aportado para la comunicación con un comprador.</li>
+            <li>En caso de requerir una publicacion PLUS esta tendra el costo de $5.000 mensuales, tras publicar contacta con el sopote para la verificacion del pago.</li>
+            <li>Si usted registra 5 o más vehículos el costo por cada vehículo registrado sera de $3.500 mensuales.</li>
+        </ul>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <div class="row">
+            <!-- Personal Information -->
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user me-2"></i>Información Personal
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="full_name" class="form-label">
+                                    <i class="fas fa-id-card me-2"></i>Nombre Completo *
+                                </label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" 
+                                       placeholder="Juan Carlos Pérez" required>
+                                <div class="invalid-feedback">Por favor ingresa tu nombre completo.</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="dni" class="form-label">
+                                    <i class="fas fa-address-card me-2"></i>DNI *
+                                </label>
+                                <input type="text" class="form-control" id="dni" name="dni" 
+                                       placeholder="12.345.678" required>
+                                <div class="invalid-feedback">Por favor ingresa un DNI válido (7-8 dígitos).</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="whatsapp_number" class="form-label">
+                                    <i class="fab fa-whatsapp me-2"></i>Número de WhatsApp
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">+549</span>
+                                    <input type="tel" class="form-control" id="whatsapp_number" name="whatsapp_number" 
+                                           placeholder="2622581554" pattern="[0-9]{10}" maxlength="10">
+                                </div>
+                                <div class="form-text">Solo ingresa tu número sin el código de país (10 dígitos)</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="call_number" class="form-label">
+                                    <i class="fas fa-phone me-2"></i>Número de Llamada
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">+549</span>
+                                    <input type="tel" class="form-control" id="call_number" name="call_number" 
+                                           placeholder="2622581554" pattern="[0-9]{10}" maxlength="10">
+                                </div>
+                                <div class="form-text">Solo ingresa tu número sin el código de país (10 dígitos)</div>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="location" class="form-label">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Ubicación *
+                                </label>
+                                <select class="form-select" id="location" name="location" required>
+                                    <option value="">Seleccionar ubicación...</option>
+                                    <option value="Tunuyán">Tunuyán</option>
+                                    <option value="Tupungato">Tupungato</option>
+                                    <option value="San Carlos">San Carlos</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor selecciona tu ubicación.</div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehicle Information -->
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-car me-2"></i>Información del Vehículo
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-tags me-2"></i>Tipo de Publicación *
+                                </label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card publication-type-card" data-type="free">
+                                            <div class="card-body text-center">
+                                                <input type="radio" class="form-check-input" id="publication_free" 
+                                                       name="publication_type" value="free" required>
+                                                <label for="publication_free" class="form-check-label w-100">
+                                                    <i class="fas fa-tag fa-2x text-secondary mb-2 d-block"></i>
+                                                    <h6 class="fw-bold">Publicación Gratuita</h6>
+                                                    <small class="text-muted">Título, precio, moneda y contacto</small>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card publication-type-card" data-type="plus">
+                                            <div class="card-body text-center">
+                                                <input type="radio" class="form-check-input" id="publication_plus" 
+                                                       name="publication_type" value="plus" required>
+                                                <label for="publication_plus" class="form-check-label w-100">
+                                                    <i class="fas fa-star fa-2x text-warning mb-2 d-block"></i>
+                                                    <h6 class="fw-bold">Publicación Plus</h6>
+                                                    <small class="text-muted">Fotos, especificaciones completas</small>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Por favor selecciona el tipo de publicación.</div>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="title" class="form-label">
+                                    <i class="fas fa-heading me-2"></i>Título del Anuncio *
+                                </label>
+                                <input type="text" class="form-control" id="title" name="title" 
+                                       placeholder="Ej: Toyota Corolla 2020" required>
+                                <div class="invalid-feedback">Por favor ingresa un título para el anuncio.</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="price" class="form-label">
+                                    <i class="fas fa-dollar-sign me-2"></i>Precio *
+                                </label>
+                                <input type="text" class="form-control" id="price" name="price" 
+                                       placeholder="2.500.000" required>
+                                <div class="invalid-feedback">Por favor ingresa un precio válido.</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="currency" class="form-label">
+                                    <i class="fas fa-coins me-2"></i>Moneda *
+                                </label>
+                                <select class="form-select" id="currency" name="currency" required>
+                                    <option value="">Seleccionar moneda...</option>
+                                    <option value="ARS">Pesos Argentinos (ARS)</option>
+                                    <option value="USD">Dólares Americanos (USD)</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor selecciona la moneda.</div>
+                            </div>
+                            
+                            <!-- Advanced Vehicle Details (Hidden for Free Publications) -->
+                            <div id="advancedVehicleDetails" style="display: none;">
+                                <div class="col-md-6 mb-3">
+                                    <label for="year" class="form-label">
+                                        <i class="fas fa-calendar me-2"></i>Año
+                                    </label>
+                                    <input type="number" class="form-control" id="year" name="year" 
+                                           placeholder="2020" min="1900" max="2025">
+                                </div>
+                            
+                                <div class="col-12 mb-3">
+                                    <label for="address" class="form-label">
+                                        <i class="fas fa-home me-2"></i>Domicilio (Opcional)
+                                    </label>
+                                    <input type="text" class="form-control" id="address" name="address" 
+                                           placeholder="Dirección donde se encuentra el vehículo">
+                                    <div class="form-text">Campo opcional - ubicación donde se encuentra el vehículo para coordinar visitas</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="brand" class="form-label">
+                                        <i class="fas fa-tag me-2"></i>Marca
+                                    </label>
+                                    <input type="text" class="form-control" id="brand" name="brand" 
+                                           placeholder="Toyota">
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="model" class="form-label">
+                                        <i class="fas fa-car-side me-2"></i>Modelo
+                                    </label>
+                                    <input type="text" class="form-control" id="model" name="model" 
+                                           placeholder="Corolla">
+                                </div>
+                            
+                                <div class="col-md-6 mb-3">
+                                    <label for="kilometers" class="form-label">
+                                        <i class="fas fa-road me-2"></i>Kilómetros
+                                    </label>
+                                    <input type="text" class="form-control" id="kilometers" name="kilometers" 
+                                           placeholder="50.000">
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="fuel_type" class="form-label">
+                                        <i class="fas fa-gas-pump me-2"></i>Combustible
+                                    </label>
+                                    <select class="form-select" id="fuel_type" name="fuel_type">
+                                        <option value="">Seleccionar...</option>
+                                        <option value="Nafta">Nafta</option>
+                                        <option value="Diesel">Diesel</option>
+                                        <option value="GNC">GNC</option>
+                                        <option value="Híbrido">Híbrido</option>
+                                        <option value="Eléctrico">Eléctrico</option>
+                                    </select>
+                                </div>
+                            
+                                <div class="col-md-6 mb-3">
+                                    <label for="transmission" class="form-label">
+                                        <i class="fas fa-cogs me-2"></i>Transmisión
+                                    </label>
+                                    <select class="form-select" id="transmission" name="transmission">
+                                        <option value="">Seleccionar...</option>
+                                        <option value="Manual">Manual</option>
+                                        <option value="Automática">Automática</option>
+                                        <option value="CVT">CVT</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="color" class="form-label">
+                                        <i class="fas fa-palette me-2"></i>Color
+                                    </label>
+                                    <input type="text" class="form-control" id="color" name="color" 
+                                           placeholder="Blanco">
+                                </div>
+                                
+                                <div class="col-12 mb-3">
+                                    <label for="description" class="form-label">
+                                        <i class="fas fa-align-left me-2"></i>Descripción *
+                                    </label>
+                                    <textarea class="form-control" id="description" name="description" 
+                                              rows="5" placeholder="Describe detalladamente el vehículo, su estado, equipamiento, mantenimientos realizados, etc." required></textarea>
+                                    <div class="invalid-feedback">Por favor ingresa una descripción del vehículo.</div>
+                                </div>
+                            </div> <!-- End of advancedVehicleDetails -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Images Section (Only for Plus) -->
+                <div class="card mb-4" id="imagesSection" style="display: none;">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-images me-2"></i>Imágenes del Vehículo
+                            <small class="text-muted">(Solo para publicaciones Plus)</small>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <p class="text-muted mb-3">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Agrega fotos de tu vehículo. Se recomiendan fotos del exterior, interior, motor y documentación.
+                            </p>
+                            
+                            <input type="file" class="d-none" 
+                                   id="vehicle_images" name="vehicle_images" 
+                                   accept="image/*">
+                            <button type="button" class="btn btn-primary" id="addImageBtn">
+                                <i class="fas fa-plus me-1"></i>Agregar Imagen
+                            </button>
+                            <div class="form-text mb-3">Máximo 16MB por imagen. Agrega una imagen por vez.</div>
+                            
+                            <!-- Hidden inputs for storing image data -->
+                            <div id="hiddenImagesContainer"></div>
+                        </div>
+                        
+                        <!-- Preview area -->
+                        <div class="mt-4">
+                            <h6 class="fw-bold mb-3">Vista previa de imágenes:</h6>
+                            <div class="alert alert-info" id="mainImageInfo" style="display: none;">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Imagen Principal:</strong> Haz clic en cualquier imagen para seleccionarla como imagen principal del perfil.
+                            </div>
+                            <div class="row" id="imagePreviewContainer">
+                                <!-- Las previews aparecerán aquí -->
+                            </div>
+                            <input type="hidden" id="mainImageIndex" name="main_image_index" value="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar with information and submit -->
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Proceso de Solicitud
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="process-step mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <div class="step-number">1</div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="fw-bold mb-1">Envías tu solicitud</h6>
+                                    <p class="text-muted mb-0">Completas este formulario con toda la información</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="process-step mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <div class="step-number">2</div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="fw-bold mb-1">Revisamos tu solicitud</h6>
+                                    <p class="text-muted mb-0">El administrador revisa y puede editar si es necesario</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="process-step mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <div class="step-number">3</div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="fw-bold mb-1">Te contactamos</h6>
+                                    <p class="text-muted mb-0">Te escribimos por WhatsApp para coordinar</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="process-step">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <div class="step-number">4</div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="fw-bold mb-1">Se publica tu vehículo</h6>
+                                    <p class="text-muted mb-0">Una vez aprobado, aparece en el sitio</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Enviar Solicitud
+                            </button>
+                            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                        </div>
+                        
+                        <div class="mt-3 text-center">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt me-1"></i>
+                                Tu información personal es confidencial
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Info -->
+                <div class="card mt-3">
+                    <div class="card-body text-center">
+                        <h6 class="fw-bold mb-2">
+                            <i class="fab fa-whatsapp text-success me-2"></i>¿Necesitas ayuda?
+                        </h6>
+                        <p class="text-muted mb-2">Si tienes dudas sobre cómo completar el formulario</p>
+                        <a href="https://wa.me/542622581554?text=Necesito%20ayuda%20para%20completar%20el%20formulario" 
+                           target="_blank" class="btn btn-outline-success btn-sm">
+                            <i class="fab fa-whatsapp me-1"></i>Contactar Soporte
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+.process-step {
+    position: relative;
+}
+
+.step-number {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.process-step:not(:last-child):after {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 35px;
+    height: 20px;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.publication-type-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #dee2e6;
+}
+
+.publication-type-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.image-preview-card {
+    transition: all 0.3s ease;
+}
+
+.image-preview-card:hover {
+    transform: translateY(-2px);
+}
+
+.image-selectable:hover {
+    opacity: 0.8;
+    border: 2px solid #007bff !important;
+}
+
+.main-image-badge {
+    z-index: 10;
+}
+
+.publication-type-card.selected {
+    border-color: #0d6efd;
+    background-color: #f8f9ff;
+}
+
+.publication-type-card input[type="radio"] {
+    display: none;
+}
+</style>
+
+<script>
+// Publication type selection functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const publicationCards = document.querySelectorAll('.publication-type-card');
+    const imagesSection = document.getElementById('imagesSection');
+    
+    publicationCards.forEach(card => {
+        card.addEventListener('click', function() {
+            // Remove selected class from all cards
+            publicationCards.forEach(c => c.classList.remove('selected'));
+            
+            // Add selected class to clicked card
+            this.classList.add('selected');
+            
+            // Check the radio button
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
+            
+            // Show/hide images section and advanced details based on selection
+            const advancedDetails = document.getElementById('advancedVehicleDetails');
+            const descriptionField = document.getElementById('description');
+            
+            if (radio.value === 'plus') {
+                imagesSection.style.display = 'block';
+                advancedDetails.style.display = 'block';
+                descriptionField.setAttribute('required', 'required');
+            } else {
+                imagesSection.style.display = 'none';
+                advancedDetails.style.display = 'none';
+                descriptionField.removeAttribute('required');
+                // Clear advanced fields when switching to free
+                clearAdvancedFields();
+            }
+        });
+    });
+    
+    // Function to clear advanced fields when switching to free publication
+    function clearAdvancedFields() {
+        document.getElementById('year').value = '';
+        document.getElementById('address').value = '';
+        document.getElementById('brand').value = '';
+        document.getElementById('model').value = '';
+        document.getElementById('kilometers').value = '';
+        document.getElementById('fuel_type').value = '';
+        document.getElementById('transmission').value = '';
+        document.getElementById('color').value = '';
+        document.getElementById('description').value = '';
+        document.getElementById('vehicle_images').value = '';
+        // Clear images array and previews
+        images = [];
+        imageCounter = 0;
+        
+        // Clear image previews
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        if (previewContainer) {
+            previewContainer.innerHTML = '';
+        }
+    }
+
+// Image preview functionality
+    const imageInput = document.getElementById('vehicle_images');
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const addImageBtn = document.getElementById('addImageBtn');
+    const hiddenImagesContainer = document.getElementById('hiddenImagesContainer');
+    
+    let imageCounter = 0;
+    let images = [];
+    
+    // Add image button functionality
+    addImageBtn.addEventListener('click', function() {
+        imageInput.click();
+    });
+    
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file size (16MB max)
+            if (file.size > 16 * 1024 * 1024) {
+                alert('La imagen es demasiado grande. Máximo 16MB por imagen.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = {
+                    id: imageCounter,
+                    file: file,
+                    dataUrl: e.target.result,
+                    name: file.name
+                };
+                
+                images.push(imageData);
+                addImagePreview(imageData);
+                updateHiddenInputs();
+                
+                imageCounter++;
+                
+                // Show the info message when first image is added
+                const mainImageInfo = document.getElementById('mainImageInfo');
+                if (mainImageInfo && images.length === 1) {
+                    mainImageInfo.style.display = 'block';
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Clear the input for next selection
+        this.value = '';
+    });
+    
+    function addImagePreview(imageData) {
+        const previewDiv = document.createElement('div');
+        previewDiv.className = 'col-md-6 col-lg-12 mb-3';
+        previewDiv.id = `preview-${imageData.id}`;
+        
+        const isMainImage = images.length === 1; // First image is main by default
+        
+        previewDiv.innerHTML = `
+            <div class="position-relative image-preview-card" data-index="${imageData.id}">
+                <img src="${imageData.dataUrl}" class="img-fluid rounded border image-selectable" 
+                     style="height: 150px; width: 100%; object-fit: cover; cursor: pointer; transition: all 0.3s ease;"
+                     onclick="selectMainImage(${imageData.id})">
+                <div class="position-absolute top-0 end-0 p-1">
+                    <button type="button" class="btn btn-sm btn-danger" onclick="removeImage(${imageData.id})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="main-image-badge position-absolute ${isMainImage ? '' : 'd-none'}" 
+                     style="top: 5px; left: 5px;">
+                    <span class="badge bg-primary">
+                        <i class="fas fa-star me-1"></i>Principal
+                    </span>
+                </div>
+                <div class="text-center mt-1">
+                    <small class="text-muted">${imageData.name}</small>
+                </div>
+            </div>
+        `;
+        
+        previewContainer.appendChild(previewDiv);
+    }
+    
+    function updateHiddenInputs() {
+        hiddenImagesContainer.innerHTML = '';
+        images.forEach((imageData, index) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = `vehicle_images_data_${index}`;
+            input.value = imageData.dataUrl;
+            hiddenImagesContainer.appendChild(input);
+        });
+        
+        // Update main image index
+        const mainImageIndexInput = document.getElementById('mainImageIndex');
+        if (mainImageIndexInput && images.length > 0) {
+            const mainImageBadge = document.querySelector('.main-image-badge:not(.d-none)');
+            if (mainImageBadge) {
+                const mainCard = mainImageBadge.closest('.image-preview-card');
+                const mainIndex = parseInt(mainCard.getAttribute('data-index'));
+                const actualIndex = images.findIndex(img => img.id === mainIndex);
+                mainImageIndexInput.value = actualIndex >= 0 ? actualIndex : 0;
+            }
+        }
+    }
+    
+    window.removeImage = function(imageId) {
+        // Remove from images array
+        images = images.filter(img => img.id !== imageId);
+        
+        // Remove preview
+        const preview = document.getElementById(`preview-${imageId}`);
+        if (preview) {
+            preview.remove();
+        }
+        
+        // Update hidden inputs
+        updateHiddenInputs();
+        
+        // If no images left, hide info message
+        if (images.length === 0) {
+            const mainImageInfo = document.getElementById('mainImageInfo');
+            if (mainImageInfo) {
+                mainImageInfo.style.display = 'none';
+            }
+        } else if (images.length === 1) {
+            // If only one image left, make it main
+            selectMainImage(images[0].id);
+        }
+    };
+    
+    // Phone number formatting
+    const phoneInput = document.getElementById('phone_number');
+    phoneInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/[^\d+]/g, '');
+        if (value && !value.startsWith('+54')) {
+            if (value.startsWith('54')) {
+                value = '+' + value;
+            } else if (value.startsWith('9')) {
+                value = '+549' + value.substring(1);
+            } else if (!value.startsWith('+')) {
+                value = '+549' + value;
+            }
+        }
+        e.target.value = value;
+    });
+});
+
+// Remove preview function
+function removePreview(imageIndex) {
+    const preview = document.getElementById(`preview-${imageIndex}`);
+    if (preview) {
+        preview.remove();
+        // Reindex remaining images and update main image if needed
+        updateImageIndexes();
+    }
+}
+
+// Select main image function
+function selectMainImage(imageIndex) {
+    // Remove main image badge from all images
+    const allBadges = document.querySelectorAll('.main-image-badge');
+    allBadges.forEach(badge => badge.classList.add('d-none'));
+    
+    // Remove selected visual effect from all images
+    const allImages = document.querySelectorAll('.image-selectable');
+    allImages.forEach(img => {
+        img.style.border = '1px solid #dee2e6';
+        img.style.boxShadow = 'none';
+    });
+    
+    // Add main image badge to selected image
+    const selectedCard = document.querySelector(`[data-index="${imageIndex}"]`);
+    if (selectedCard) {
+        const badge = selectedCard.querySelector('.main-image-badge');
+        if (badge) badge.classList.remove('d-none');
+        
+        // Add visual selected effect
+        const img = selectedCard.querySelector('.image-selectable');
+        if (img) {
+            img.style.border = '3px solid #007bff';
+            img.style.boxShadow = '0 0 10px rgba(0, 123, 255, 0.3)';
+        }
+    }
+    
+    // Update hidden input value
+    const mainImageIndexInput = document.getElementById('mainImageIndex');
+    if (mainImageIndexInput) {
+        mainImageIndexInput.value = imageIndex;
+    }
+}
+
+// Update image indexes after removal
+function updateImageIndexes() {
+    const previewCards = document.querySelectorAll('.image-preview-card');
+    previewCards.forEach((card, newIndex) => {
+        card.setAttribute('data-index', newIndex);
+        
+        const img = card.querySelector('.image-selectable');
+        if (img) {
+            img.setAttribute('onclick', `selectMainImage(${newIndex})`);
+        }
+        
+        const removeBtn = card.querySelector('.btn-danger');
+        if (removeBtn) {
+            removeBtn.setAttribute('onclick', `removePreview(${newIndex})`);
+        }
+        
+        // Update parent div ID
+        const parentDiv = card.closest('[id^="preview-"]');
+        if (parentDiv) {
+            parentDiv.id = `preview-${newIndex}`;
+        }
+    });
+    
+    // If no main image is selected, make the first one main
+    const mainImageBadges = document.querySelectorAll('.main-image-badge:not(.d-none)');
+    if (mainImageBadges.length === 0 && previewCards.length > 0) {
+        selectMainImage(0);
+    }
+}
+
+// Number formatting functions
+function formatDNI(input) {
+    // Remove all non-numeric characters
+    let value = input.value.replace(/\D/g, '');
+    
+    // Limit to 8 digits and format with dots
+    if (value.length > 8) {
+        value = value.substring(0, 8);
+    }
+    
+    if (value.length > 2) {
+        if (value.length <= 5) {
+            value = value.replace(/(\d{2})(\d+)/, '$1.$2');
+        } else {
+            value = value.replace(/(\d{2})(\d{3})(\d+)/, '$1.$2.$3');
+        }
+    }
+    
+    input.value = value;
+}
+
+function formatNumber(input) {
+    // Remove all non-numeric characters
+    let value = input.value.replace(/\D/g, '');
+    
+    // Format with dots as thousand separators
+    if (value) {
+        value = parseInt(value, 10).toLocaleString('es-AR').replace(/,/g, '.');
+    }
+    
+    input.value = value;
+}
+
+function validateContactNumbers() {
+    const whatsappNumber = document.getElementById('whatsapp_number');
+    const callNumber = document.getElementById('call_number');
+    const errorDiv = document.getElementById('contact-numbers-error');
+    
+    // Remove existing error div if it exists
+    if (errorDiv) {
+        errorDiv.remove();
+    }
+    
+    // Check if at least one contact number is provided
+    if ((!whatsappNumber.value.trim()) && (!callNumber.value.trim())) {
+        // Create error message
+        const newErrorDiv = document.createElement('div');
+        newErrorDiv.id = 'contact-numbers-error';
+        newErrorDiv.className = 'alert alert-danger mt-2';
+        newErrorDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Debes proporcionar al menos un número de contacto (WhatsApp o llamada).';
+        
+        callNumber.parentNode.appendChild(newErrorDiv);
+        return false;
+    }
+    
+    return true;
+}
+
+// Add number formatting on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const dniInput = document.getElementById('dni');
+    const priceInput = document.getElementById('price');
+    const kilometersInput = document.getElementById('kilometers');
+    
+    if (dniInput) {
+        dniInput.addEventListener('input', function() {
+            formatDNI(this);
+        });
+    }
+    
+    if (priceInput) {
+        priceInput.addEventListener('input', function() {
+            formatNumber(this);
+        });
+    }
+    
+    if (kilometersInput) {
+        kilometersInput.addEventListener('input', function() {
+            formatNumber(this);
+        });
+    }
+    
+    // Add contact number validation to form submission
+    const form = document.querySelector('.needs-validation');
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            if (!validateContactNumbers()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        });
+    }
+});
+
+// Bootstrap form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
+{% endblock %}

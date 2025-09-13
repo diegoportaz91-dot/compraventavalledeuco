@@ -1,0 +1,8 @@
+2025-09-12 23:21:54,789 - WARNING - Tarea no encontrada para eliminar: MarketplaceVUco_DailyBackup
+2025-09-12 23:21:54,797 - WARNING - Tarea no encontrada para eliminar: MarketplaceVUco_WeeklyBackup
+2025-09-12 23:21:54,805 - WARNING - Tarea no encontrada para eliminar: MarketplaceVUco_MonthlyBackup
+2025-09-12 23:21:54,813 - WARNING - Tarea no encontrada para eliminar: MarketplaceVUco_BackupCleanup
+2025-09-12 23:21:54,825 - INFO - Tarea diaria creada: MarketplaceVUco_DailyBackup a las 02:00
+2025-09-12 23:21:54,839 - INFO - Tarea semanal creada: MarketplaceVUco_WeeklyBackup los SUN a las 02:30
+2025-09-12 23:21:54,852 - INFO - Tarea mensual creada: MarketplaceVUco_MonthlyBackup el día 1 a las 03:00
+2025-09-12 23:21:54,865 - INFO - Tarea de limpieza creada: MarketplaceVUco_BackupCleanup a las 04:00

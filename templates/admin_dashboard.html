@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}Panel Administrativo - AutoMarket Argentina{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+    {% include 'admin_sidebar.html' %}
+    
+    <div class="admin-content">
+        <div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-6 fw-bold">
+                        <i class="fas fa-tachometer-alt me-3 text-primary"></i>Panel Administrativo
+                    </h1>
+                    <p class="text-muted">Gestión y estadísticas del marketplace</p>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-5">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card stat-card border-primary">
+                <div class="card-body text-center">
+                    <i class="fas fa-car text-primary mb-3" style="font-size: 2.5rem;"></i>
+                    <h3 class="fw-bold">{{ stats.active_vehicles }}/{{ stats.total_vehicles }}</h3>
+                    <p class="text-muted mb-0">Activos/Total Vehículos</p>
+                    <small class="text-success">
+                        <i class="fas fa-check-circle me-1"></i>{{ stats.active_vehicles }} activos
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card stat-card border-warning">
+                <div class="card-body text-center position-relative">
+                    <i class="fas fa-clock text-warning mb-3" style="font-size: 2.5rem;"></i>
+                    <h3 class="fw-bold">{{ stats.pending_requests_count }}</h3>
+                    <p class="text-muted mb-0">Solicitudes Pendientes</p>
+                    {% if stats.pending_requests_count > 0 %}
+                    <div class="position-absolute top-0 end-0 m-2">
+                        <span class="badge bg-danger rounded-pill">{{ stats.pending_requests_count }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card stat-card border-success">
+                <div class="card-body text-center">
+                    <i class="fab fa-whatsapp text-success mb-3" style="font-size: 2.5rem;"></i>
+                    <h3 class="fw-bold">{{ stats.total_whatsapp_clicks }}</h3>
+                    <p class="text-muted mb-0">Clics WhatsApp</p>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card stat-card border-info">
+                <div class="card-body text-center">
+                    <i class="fas fa-globe text-info mb-3" style="font-size: 2.5rem;"></i>
+                    <h3 class="fw-bold">{{ stats.total_page_visits }}</h3>
+                    <p class="text-muted mb-0">Visitas a la Página</p>
+                    <small class="text-success">
+                        <i class="fas fa-calendar-day me-1"></i>{{ stats.today_visits }} hoy
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Statistics Row -->
+    <div class="row mb-5">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card stat-card border-secondary">
+                <div class="card-body text-center">
+                    <i class="fas fa-eye text-secondary mb-3" style="font-size: 2.5rem;"></i>
+                    <h3 class="fw-bold">{{ stats.total_views }}</h3>
+                    <p class="text-muted mb-0">Visualizaciones de Vehículos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Most Viewed Vehicles -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>Ranking de Vehículos Más Vistos
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <div class="btn-group" role="group">
+                            <a href="{{ url_for('admin_dashboard', sort_by='views', sort_order='desc') }}" 
+                               class="btn btn-sm {{ 'btn-primary' if stats.sort_by == 'views' and stats.sort_order == 'desc' else 'btn-outline-primary' }}">
+                                <i class="fas fa-eye me-1"></i>Vistas ↓
+                            </a>
+                            <a href="{{ url_for('admin_dashboard', sort_by='views', sort_order='asc') }}" 
+                               class="btn btn-sm {{ 'btn-primary' if stats.sort_by == 'views' and stats.sort_order == 'asc' else 'btn-outline-primary' }}">
+                                <i class="fas fa-eye me-1"></i>Vistas ↑
+                            </a>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <a href="{{ url_for('admin_dashboard', sort_by='clicks', sort_order='desc') }}" 
+                               class="btn btn-sm {{ 'btn-success' if stats.sort_by == 'clicks' and stats.sort_order == 'desc' else 'btn-outline-success' }}">
+                                <i class="fas fa-mouse-pointer me-1"></i>Clicks ↓
+                            </a>
+                            <a href="{{ url_for('admin_dashboard', sort_by='clicks', sort_order='asc') }}" 
+                               class="btn btn-sm {{ 'btn-success' if stats.sort_by == 'clicks' and stats.sort_order == 'asc' else 'btn-outline-success' }}">
+                                <i class="fas fa-mouse-pointer me-1"></i>Clicks ↑
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if stats.most_viewed %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-trophy me-2"></i>Posición</th>
+                                        <th><i class="fas fa-image me-2"></i>Imagen</th>
+                                        <th><i class="fas fa-car me-2"></i>Vehículo</th>
+                                        <th><i class="fas fa-tag me-2"></i>Tipo</th>
+                                        <th><i class="fas fa-dollar-sign me-2"></i>Precio</th>
+                                        <th><i class="fas fa-eye me-2"></i>Visualizaciones</th>
+                                        <th><i class="fas fa-mouse-pointer me-2"></i>Clicks WhatsApp/Llamadas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for vehicle, view_count, click_count in stats.most_viewed %}
+                                        <tr>
+                                            <td>
+                                                <span class="badge bg-primary">{{ loop.index }}</span>
+                                            </td>
+                                            <td>
+                                                {% if vehicle.is_plus %}
+                                                    {% if vehicle.get_main_image() %}
+                                                        <img src="{{ vehicle.get_main_image() }}" 
+                                                             class="rounded" 
+                                                             style="width: 60px; height: 45px; object-fit: cover;"
+                                                             alt="{{ vehicle.title }}"
+                                                             onerror="this.src='/static/placeholder-car.png';">
+                                                    {% else %}
+                                                        <div class="rounded d-flex align-items-center justify-content-center bg-light border" 
+                                                             style="width: 60px; height: 45px;">
+                                                            <i class="fas fa-car text-muted"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <!-- Free plan: show car silhouette -->
+                                                    <img src="{{ url_for('static', filename='placeholder-car.png') }}" 
+                                                         class="rounded" 
+                                                         style="width: 60px; height: 45px; object-fit: contain; background-color: #f8f9fa;"
+                                                         alt="{{ vehicle.title }}">
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{{ url_for('vehicle_detail', id=vehicle.id) }}" 
+                                                   class="text-decoration-none">
+                                                    {{ vehicle.title }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                {% if vehicle.is_plus %}
+                                                    <span class="badge bg-warning">
+                                                        <i class="fas fa-star me-1"></i>Plus
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">
+                                                        <i class="fas fa-gift me-1"></i>Gratuita
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="{{ vehicle.get_currency_class() }}">
+                                                {{ vehicle.format_price_with_currency() }}
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">{{ view_count }}</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-success">{{ click_count }}</span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-chart-line text-muted" style="font-size: 3rem;"></i>
+                            <h5 class="mt-3 text-muted">No hay datos disponibles</h5>
+                            <p class="text-muted">Las estadísticas aparecerán cuando haya actividad.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

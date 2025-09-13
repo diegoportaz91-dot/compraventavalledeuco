@@ -1,0 +1,708 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Solicitud - Panel Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-6 fw-bold">
+                        <i class="fas fa-edit me-3 text-primary"></i>Editar Solicitud
+                    </h1>
+                    <p class="text-muted">Modifica los datos antes de aprobar la publicación</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('admin_pending_requests') }}" class="btn btn-outline-secondary me-2">
+                        <i class="fas fa-arrow-left me-2"></i>Volver a Solicitudes
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-danger" 
+                       onclick="return confirm('¿Estás seguro de que quieres cerrar sesión?')">
+                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client Info Alert -->
+    <div class="alert alert-info alert-permanent mb-4">
+        <h6 class="alert-heading">
+            <i class="fas fa-user me-2"></i>Cliente: {{ client_request.full_name }}
+        </h6>
+        <div class="row">
+            <div class="col-md-6">
+                <p class="mb-1"><strong>DNI:</strong> {{ client_request.dni }}</p>
+                <p class="mb-1"><strong>Ubicación:</strong> {{ client_request.location }}</p>
+            </div>
+            <div class="col-md-6">
+                <p class="mb-1"><strong>Teléfono:</strong> {{ client_request.phone_number }}</p>
+                <p class="mb-1"><strong>Solicitado:</strong> {{ client_request.created_at.strftime('%d/%m/%Y %H:%M') }}</p>
+            </div>
+        </div>
+        <div class="mt-2">
+            <a href="{{ client_request.get_whatsapp_contact_url() }}" 
+               target="_blank" 
+               class="btn btn-success btn-sm">
+                <i class="fab fa-whatsapp me-1"></i>Contactar Cliente
+            </a>
+        </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <div class="row">
+            <!-- Personal Information -->
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user me-2"></i>Información Personal
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="full_name" class="form-label">
+                                    <i class="fas fa-id-card me-2"></i>Nombre Completo *
+                                </label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" 
+                                       value="{{ client_request.full_name }}" required>
+                                <div class="invalid-feedback">Por favor ingresa el nombre completo.</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="dni" class="form-label">
+                                    <i class="fas fa-address-card me-2"></i>DNI *
+                                </label>
+                                <input type="text" class="form-control" id="dni" name="dni" 
+                                       value="{{ client_request.dni }}" pattern="[0-9]{7,8}" required>
+                                <div class="invalid-feedback">Por favor ingresa un DNI válido.</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="phone_number" class="form-label">
+                                    <i class="fas fa-phone me-2"></i>Número de WhatsApp *
+                                </label>
+                                <input type="tel" class="form-control" id="phone_number" name="phone_number" 
+                                       value="{{ client_request.phone_number }}" required>
+                                <div class="invalid-feedback">Por favor ingresa el número de WhatsApp.</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="location" class="form-label">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Ubicación *
+                                </label>
+                                <select class="form-select" id="location" name="location" required>
+                                    <option value="">Seleccionar ubicación...</option>
+                                    <option value="Tunuyán" {{ "selected" if client_request.location == "Tunuyán" else "" }}>Tunuyán</option>
+                                    <option value="Tupungato" {{ "selected" if client_request.location == "Tupungato" else "" }}>Tupungato</option>
+                                    <option value="San Carlos" {{ "selected" if client_request.location == "San Carlos" else "" }}>San Carlos</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor selecciona la ubicación.</div>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="address" class="form-label">
+                                    <i class="fas fa-home me-2"></i>Domicilio (Opcional)
+                                </label>
+                                <input type="text" class="form-control" id="address" name="address" 
+                                       value="{{ client_request.address or '' }}" 
+                                       placeholder="Calle Example 123, Barrio Centro">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehicle Information -->
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-car me-2"></i>Información del Vehículo
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label for="title" class="form-label">
+                                    <i class="fas fa-heading me-2"></i>Título del Anuncio *
+                                </label>
+                                <input type="text" class="form-control" id="title" name="title" 
+                                       value="{{ client_request.title }}" required>
+                                <div class="invalid-feedback">Por favor ingresa un título.</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="price" class="form-label">
+                                    <i class="fas fa-dollar-sign me-2"></i>Precio *
+                                </label>
+                                <input type="number" class="form-control" id="price" name="price" 
+                                       value="{{ client_request.price }}" min="1" required>
+                                <div class="invalid-feedback">Por favor ingresa un precio válido.</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="currency" class="form-label">
+                                    <i class="fas fa-coins me-2"></i>Moneda *
+                                </label>
+                                <select class="form-select" id="currency" name="currency" required>
+                                    <option value="">Seleccionar moneda...</option>
+                                    <option value="ARS" {{ "selected" if client_request.currency == "ARS" else "" }}>Pesos Argentinos (ARS)</option>
+                                    <option value="USD" {{ "selected" if client_request.currency == "USD" else "" }}>Dólares Americanos (USD)</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor selecciona la moneda.</div>
+                            </div>
+                            
+                            {% if client_request.publication_type == 'plus' %}
+                            <div class="col-md-6 mb-3">
+                                <label for="year" class="form-label">
+                                    <i class="fas fa-calendar me-2"></i>Año
+                                </label>
+                                <input type="number" class="form-control" id="year" name="year" 
+                                       value="{{ client_request.year or '' }}" min="1900" max="2025">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="brand" class="form-label">
+                                    <i class="fas fa-tag me-2"></i>Marca
+                                </label>
+                                <input type="text" class="form-control" id="brand" name="brand" 
+                                       value="{{ client_request.brand or '' }}">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="model" class="form-label">
+                                    <i class="fas fa-car-side me-2"></i>Modelo
+                                </label>
+                                <input type="text" class="form-control" id="model" name="model" 
+                                       value="{{ client_request.model or '' }}">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="kilometers" class="form-label">
+                                    <i class="fas fa-road me-2"></i>Kilómetros
+                                </label>
+                                <input type="number" class="form-control" id="kilometers" name="kilometers" 
+                                       value="{{ client_request.kilometers or '' }}" min="0">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="fuel_type" class="form-label">
+                                    <i class="fas fa-gas-pump me-2"></i>Combustible
+                                </label>
+                                <select class="form-select" id="fuel_type" name="fuel_type">
+                                    <option value="">Seleccionar...</option>
+                                    <option value="Nafta" {{ "selected" if client_request.fuel_type == "Nafta" else "" }}>Nafta</option>
+                                    <option value="Diesel" {{ "selected" if client_request.fuel_type == "Diesel" else "" }}>Diesel</option>
+                                    <option value="GNC" {{ "selected" if client_request.fuel_type == "GNC" else "" }}>GNC</option>
+                                    <option value="Híbrido" {{ "selected" if client_request.fuel_type == "Híbrido" else "" }}>Híbrido</option>
+                                    <option value="Eléctrico" {{ "selected" if client_request.fuel_type == "Eléctrico" else "" }}>Eléctrico</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="transmission" class="form-label">
+                                    <i class="fas fa-cogs me-2"></i>Transmisión
+                                </label>
+                                <select class="form-select" id="transmission" name="transmission">
+                                    <option value="">Seleccionar...</option>
+                                    <option value="Manual" {{ "selected" if client_request.transmission == "Manual" else "" }}>Manual</option>
+                                    <option value="Automática" {{ "selected" if client_request.transmission == "Automática" else "" }}>Automática</option>
+                                    <option value="CVT" {{ "selected" if client_request.transmission == "CVT" else "" }}>CVT</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="color" class="form-label">
+                                    <i class="fas fa-palette me-2"></i>Color
+                                </label>
+                                <input type="text" class="form-control" id="color" name="color" 
+                                       value="{{ client_request.color or '' }}">
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="description" class="form-label">
+                                    <i class="fas fa-align-left me-2"></i>Descripción *
+                                </label>
+                                <textarea class="form-control" id="description" name="description" 
+                                          rows="5" required>{{ client_request.description }}</textarea>
+                                <div class="invalid-feedback">Por favor ingresa una descripción.</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Campo description siempre presente para evitar KeyError -->
+                        {% if client_request.publication_type != 'plus' %}
+                        <input type="hidden" name="description" value="{{ client_request.description or '' }}">
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {% if client_request.publication_type == 'plus' %}
+                <!-- Current Images -->
+                {% if client_request.get_images_list() %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-images me-2"></i>Imágenes Actuales
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for image in client_request.get_images_list() %}
+                            <div class="col-md-3 mb-3">
+                                <div class="position-relative">
+                                    <img src="{{ image }}" class="img-fluid rounded" 
+                                         style="height: 150px; width: 100%; object-fit: cover;" 
+                                         alt="Imagen del vehículo">
+                                    <button type="button" 
+                                            class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 delete-image-btn"
+                                            data-image-url="{{ image }}"
+                                            title="Eliminar imagen">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-images me-2"></i>Imágenes del Vehículo
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center py-4">
+                            <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>
+                            <h6 class="mt-3 text-muted">No hay imágenes cargadas</h6>
+                            <p class="text-muted">Las imágenes se mostrarán aquí una vez que se suban desde la sección de abajo</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Información Permanente sobre Imágenes -->
+                <div class="alert alert-info mb-4">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Gestión de Imágenes:</strong> 
+                    {% if client_request.get_images_list() %}
+                        Para cambiar las imágenes, selecciona nuevas imágenes abajo. Las actuales serán reemplazadas.
+                    {% else %}
+                        Puedes agregar imágenes del vehículo usando la sección "Cambiar Imágenes" de abajo.
+                    {% endif %}
+                    El cliente puede subir hasta 10 imágenes por vehículo.
+                </div>
+                <!-- Upload New Images -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-camera me-2"></i>Cambiar Imágenes (Opcional)
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                            <input type="file" class="d-none" 
+                                   id="vehicle_images" name="vehicle_images" 
+                                   accept="image/*">
+                            <button type="button" class="btn btn-primary" id="addImageBtn">
+                                <i class="fas fa-plus me-1"></i>Agregar Imagen
+                            </button>
+                        <div class="form-text mb-3">Máximo 16MB por imagen. Agrega una imagen por vez.</div>
+                        
+                        <!-- Hidden inputs for storing image data -->
+                        <div id="hiddenImagesContainer"></div>
+                        
+                        <!-- Preview area -->
+                        <div class="mt-4">
+                            <h6 class="fw-bold mb-3">Vista previa de nuevas imágenes:</h6>
+                            <div class="row" id="imagePreviewContainer">
+                                <!-- Las previews aparecerán aquí -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Sidebar with actions and notes -->
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-sticky-note me-2"></i>Notas del Administrador
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="admin_notes" class="form-label">Notas privadas</label>
+                            <textarea class="form-control" id="admin_notes" name="admin_notes" rows="4" 
+                                      placeholder="Agrega notas sobre cambios realizados, observaciones, etc.">{{ client_request.admin_notes or '' }}</textarea>
+                            <div class="form-text">Estas notas son solo para uso interno del administrador.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3">Acciones Rápidas</h6>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i>Guardar Cambios
+                            </button>
+                            
+                            <button type="button" class="btn btn-success approve-btn-edit" 
+                                    data-request-id="{{ client_request.id }}" 
+                                    data-request-title="{{ client_request.title }}" 
+                                    data-publication-type="{{ client_request.publication_type }}">
+                                <i class="fas fa-check me-2"></i>Aprobar y Publicar
+                            </button>
+                            
+                            <a href="{{ client_request.get_whatsapp_contact_url() }}" 
+                               target="_blank" 
+                               class="btn btn-success">
+                                <i class="fab fa-whatsapp me-2"></i>Contactar Cliente
+                            </a>
+                            
+                            <a href="{{ url_for('admin_pending_requests') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Volver sin Guardar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Request Info -->
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-info me-2"></i>Información de la Solicitud
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="small">
+                            <div class="mb-2">
+                                <strong>Estado:</strong> 
+                                <span class="badge bg-warning">{{ client_request.status.title() }}</span>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Creada:</strong> {{ client_request.created_at.strftime('%d/%m/%Y %H:%M') }}
+                            </div>
+                            {% if client_request.updated_at != client_request.created_at %}
+                            <div class="mb-2">
+                                <strong>Modificada:</strong> {{ client_request.updated_at.strftime('%d/%m/%Y %H:%M') }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+// Image preview functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('vehicle_images');
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const addImageBtn = document.getElementById('addImageBtn');
+    const hiddenImagesContainer = document.getElementById('hiddenImagesContainer');
+    
+    let imageCounter = 0;
+    let images = [];
+    
+    // Add image button functionality
+    addImageBtn.addEventListener('click', function() {
+        imageInput.click();
+    });
+    
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file size (16MB max)
+            if (file.size > 16 * 1024 * 1024) {
+                alert('La imagen es demasiado grande. Máximo 16MB por imagen.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = {
+                    id: imageCounter,
+                    file: file,
+                    dataUrl: e.target.result,
+                    name: file.name
+                };
+                
+                images.push(imageData);
+                addImagePreview(imageData);
+                updateHiddenInputs();
+                
+                imageCounter++;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Clear the input for next selection
+        this.value = '';
+    });
+    
+    function addImagePreview(imageData) {
+        const previewDiv = document.createElement('div');
+        previewDiv.className = 'col-md-6 col-lg-4 mb-3';
+        previewDiv.id = `preview-${imageData.id}`;
+        
+        const isMainImage = images.length === 1; // First image is main by default
+        
+        previewDiv.innerHTML = `
+            <div class="position-relative image-preview-card" data-index="${imageData.id}">
+                <img src="${imageData.dataUrl}" class="img-fluid rounded border image-selectable" 
+                     style="height: 200px; width: 100%; object-fit: cover; cursor: pointer; transition: all 0.3s ease;"
+                     onclick="selectMainImage(${imageData.id})">
+                <div class="position-absolute top-0 end-0 p-1">
+                    <button type="button" class="btn btn-sm btn-danger" onclick="removeImage(${imageData.id})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="main-image-badge position-absolute ${isMainImage ? '' : 'd-none'}" 
+                     style="top: 5px; left: 5px;">
+                    <span class="badge bg-primary">
+                        <i class="fas fa-star me-1"></i>Principal
+                    </span>
+                </div>
+                <div class="text-center mt-1">
+                    <small class="text-muted">${imageData.name}</small>
+                </div>
+            </div>
+        `;
+        
+        previewContainer.appendChild(previewDiv);
+    }
+    
+    function updateHiddenInputs() {
+        hiddenImagesContainer.innerHTML = '';
+        images.forEach((imageData, index) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = `vehicle_images_data_${index}`;
+            input.value = imageData.dataUrl;
+            hiddenImagesContainer.appendChild(input);
+        });
+    }
+    
+    window.removeImage = function(imageId) {
+        // Remove from images array
+        images = images.filter(img => img.id !== imageId);
+        
+        // Remove preview
+        const preview = document.getElementById(`preview-${imageId}`);
+        if (preview) {
+            preview.remove();
+        }
+        
+        // Update hidden inputs
+        updateHiddenInputs();
+        
+        // If only one image left, make it main
+        if (images.length === 1) {
+            selectMainImage(images[0].id);
+        }
+    };
+    
+    window.selectMainImage = function(imageId) {
+        // Remove main badge from all images
+        document.querySelectorAll('.main-image-badge').forEach(badge => {
+            badge.classList.add('d-none');
+        });
+        
+        // Add main badge to selected image
+        const selectedCard = document.querySelector(`[data-index="${imageId}"]`);
+        if (selectedCard) {
+            const badge = selectedCard.querySelector('.main-image-badge');
+            if (badge) {
+                badge.classList.remove('d-none');
+            }
+        }
+        
+        // Update hidden input
+        updateHiddenInputs();
+    };
+});
+
+// Bootstrap form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
+
+<!-- Approve Modal -->
+<div class="modal fade" id="approveModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-check-circle me-2"></i>Aprobar Solicitud
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <h6>Vehículo: <span id="approveVehicleTitle"></span></h6>
+                    <p class="text-muted">Tipo: <span id="approveVehicleType"></span></p>
+                </div>
+                <div class="mb-3 duration-container">
+                    <label for="premiumDuration" class="form-label">
+                        <i class="fas fa-star me-2"></i>Duración Premium (meses)
+                    </label>
+                    <select class="form-select" id="premiumDuration">
+                        <option value="1">1 mes</option>
+                        <option value="2">2 meses</option>
+                        <option value="3">3 meses</option>
+                        <option value="4">4 meses</option>
+                        <option value="5">5 meses</option>
+                        <option value="6">6 meses</option>
+                        <option value="7">7 meses</option>
+                        <option value="8">8 meses</option>
+                        <option value="9">9 meses</option>
+                        <option value="10">10 meses</option>
+                        <option value="11">11 meses</option>
+                        <option value="12">12 meses</option>
+                    </select>
+                    <div class="form-text">
+                        Selecciona cuántos meses de visibilidad premium tendrá esta publicación.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" id="confirmApproveBtn">
+                    <i class="fas fa-check me-2"></i>Aprobar y Publicar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    let currentRequestId = null;
+    
+    // Open approve modal
+    window.openApproveModal = function(requestId, vehicleTitle, publicationType) {
+        console.log('Opening approve modal:', { requestId, vehicleTitle, publicationType });
+        
+        currentRequestId = requestId;
+        document.getElementById('approveVehicleTitle').textContent = vehicleTitle;
+        document.getElementById('approveVehicleType').textContent = publicationType === 'plus' ? 'Plus (Premium)' : 'Gratuito';
+        
+        // Show/hide duration selector based on publication type
+        const durationContainer = document.querySelector('.duration-container');
+        if (publicationType === 'plus') {
+            durationContainer.style.display = 'block';
+            document.getElementById('premiumDuration').value = '1';
+        } else {
+            durationContainer.style.display = 'none';
+        }
+        
+        const modal = new bootstrap.Modal(document.getElementById('approveModal'));
+        modal.show();
+    };
+    
+    // Add event listener for approve button
+    const approveBtn = document.querySelector('.approve-btn-edit');
+    if (approveBtn) {
+        approveBtn.addEventListener('click', function() {
+            const requestId = this.dataset.requestId;
+            const requestTitle = this.dataset.requestTitle;
+            const publicationType = this.dataset.publicationType;
+            openApproveModal(requestId, requestTitle, publicationType);
+        });
+    }
+    
+    // Confirm approve
+    document.getElementById('confirmApproveBtn').addEventListener('click', function() {
+        if (!currentRequestId) {
+            alert('Error: No se ha seleccionado una solicitud');
+            return;
+        }
+        
+        // Get publication type from modal
+        const publicationType = document.getElementById('approveVehicleType').textContent;
+        const isPlus = publicationType.includes('Plus');
+        
+        let duration = 1; // Default for free publications
+        
+        if (isPlus) {
+            duration = document.getElementById('premiumDuration').value;
+            if (!duration || duration < 1 || duration > 12) {
+                alert('Por favor selecciona una duración válida (1-12 meses)');
+                return;
+            }
+        }
+        
+        const url = `/admin/procesar-solicitud/${currentRequestId}/approve?duration=${duration}`;
+        
+        console.log('Approving request:', {
+            requestId: currentRequestId,
+            duration: duration,
+            publicationType: publicationType,
+            url: url
+        });
+        
+        // Show loading state
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+        
+        window.location.href = url;
+    });
+});
+
+// Delete existing image functionality
+document.querySelectorAll('.delete-image-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const imageUrl = this.getAttribute('data-image-url');
+        const imageContainer = this.closest('.col-md-3');
+        
+        if (confirm('¿Estás seguro de que quieres eliminar esta imagen?')) {
+            // Create hidden input to mark image for deletion
+            const deleteInput = document.createElement('input');
+            deleteInput.type = 'hidden';
+            deleteInput.name = 'delete_images[]';
+            deleteInput.value = imageUrl;
+            hiddenImagesContainer.appendChild(deleteInput);
+            
+            // Remove image from display
+            imageContainer.remove();
+            
+            // Show success message
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-permanent';
+            alertDiv.innerHTML = `
+                <i class="fas fa-check me-2"></i>Imagen marcada para eliminación. Se eliminará al guardar los cambios.
+            `;
+            
+            // Insert alert before the images section
+            const imagesCard = document.querySelector('.card');
+            imagesCard.parentNode.insertBefore(alertDiv, imagesCard);
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,1150 @@
+/* Custom CSS for MarketplaceVUco*/
+
+:root {
+    --primary-color: #2563eb;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --dark-color: #1f2937;
+    --light-color: #f9fafb;
+    --brand-blue: #2563eb;
+    --brand-green: #10b981;
+}
+
+/* General Styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f8fafc;
+}
+
+/* Logo and Branding */
+.logo-circle {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--brand-blue), var(--brand-green));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.brand-text {
+    color: var(--dark-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.navbar {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.navbar-brand:hover .logo-circle {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+/* Hero Section */
+.hero-section-blue {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    position: relative;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+}
+
+.search-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-container .input-group {
+    border-radius: 50px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+.search-container .form-control {
+    border-radius: 0 50px 50px 0;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+}
+
+.search-container .input-group-text {
+    border-radius: 50px 0 0 50px;
+    padding: 1rem 1.5rem;
+}
+
+.logo-circle-large {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--brand-blue), var(--brand-green));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    box-shadow: 0 8px 32px rgba(37, 99, 235, 0.3);
+}
+
+.feature-badge {
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    border: 1px solid #e2e8f0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--dark-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Vehicle Department Badges */
+.vehicle-department-badge {
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.vehicle-department-badge.tunuyán {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.vehicle-department-badge.tupungato {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.vehicle-department-badge.san-carlos {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.hero-illustration {
+    padding: 2rem;
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    border-radius: 20px;
+    margin: 1rem;
+}
+
+/* Vehicle Cards */
+.vehicle-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    background: white;
+    position: relative;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+    border-color: var(--brand-blue);
+}
+
+.vehicle-card .card-img-top {
+    position: relative;
+}
+
+.vehicle-photos-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.vehicle-price-large {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--success-color);
+}
+
+.vehicle-title-large {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 0.5rem;
+}
+
+/* Most Viewed Carousel */
+.most-viewed-carousel {
+    position: relative;
+}
+
+.most-viewed-carousel .overflow-auto {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.most-viewed-carousel .overflow-auto::-webkit-scrollbar {
+    height: 6px;
+}
+
+.most-viewed-carousel .overflow-auto::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+}
+
+.most-viewed-carousel .overflow-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.most-viewed-carousel .overflow-auto::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.most-viewed-card {
+    width: 200px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.most-viewed-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.most-viewed-image {
+    width: 200px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.most-viewed-views {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: linear-gradient(45deg, #3b82f6, #2563eb);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    min-width: 32px;
+    justify-content: center;
+}
+
+.most-viewed-content {
+    padding: 12px;
+}
+
+.most-viewed-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 4px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.most-viewed-price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--success-color);
+}
+
+/* Advertisement Banner */
+.advertisement-banner {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.advertisement-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--brand-green), var(--warning-color));
+}
+
+.advertisement-banner:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color);
+}
+
+.ad-content h5 {
+    color: var(--primary-color) !important;
+    font-size: 1.3rem;
+}
+
+.ad-content p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.ad-content strong {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* Permanent Information Banner - Modern Design */
+.permanent-info-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    margin: 1rem 0;
+    padding: 0;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+    display: block;
+    min-height: 140px;
+}
+
+.banner-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+}
+
+.banner-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+}
+
+.banner-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+}
+
+.banner-main-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.banner-text {
+    flex: 1;
+    min-width: 300px;
+    color: white;
+}
+
+.banner-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    backdrop-filter: blur(10px);
+}
+
+.banner-badge i {
+    margin-right: 0.5rem;
+    color: #fbbf24;
+}
+
+.banner-title {
+    color: white;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 0.8rem 0;
+    line-height: 1.3;
+}
+
+.banner-description {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 1rem 0;
+}
+
+.banner-features {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.feature-item i {
+    color: #10b981;
+    margin-right: 0.4rem;
+    font-size: 0.8rem;
+}
+
+.banner-visual {
+    flex-shrink: 0;
+    width: 120px;
+    height: 100px;
+    position: relative;
+}
+
+.banner-icon-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.floating-icon {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: float 3s ease-in-out infinite;
+}
+
+.floating-icon:nth-child(1) {
+    top: 10px;
+    left: 10px;
+}
+
+.floating-icon:nth-child(2) {
+    top: 30px;
+    right: 10px;
+    animation-delay: -1s;
+}
+
+.floating-icon:nth-child(3) {
+    bottom: 10px;
+    left: 30px;
+    animation-delay: -2s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.banner-button {
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    color: white;
+    padding: 0.8rem 1.8rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 0.95rem;
+}
+
+.banner-button:hover {
+    background: linear-gradient(135deg, #128c7e, #075e54);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+}
+
+.banner-button i:last-child {
+    transition: transform 0.3s ease;
+}
+
+.banner-button:hover i:last-child {
+    transform: translateX(3px);
+}
+
+.banner-close {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.banner-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .banner-main-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .banner-visual {
+        width: 100px;
+        height: 80px;
+    }
+    
+    .banner-features {
+        justify-content: center;
+    }
+    
+    .banner-content {
+        padding: 1.2rem;
+    }
+    
+    .permanent-info-banner {
+        margin: 0.5rem 0;
+    }
+}
+
+.banner-close {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #d1d5db;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #6b7280;
+}
+
+.banner-close:hover {
+    background: rgba(255, 255, 255, 0.9);
+    color: #374151;
+    transform: scale(1.1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .banner-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .banner-text {
+        min-width: auto;
+    }
+
+    .banner-actions {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+.vehicle-image {
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.vehicle-card:hover .vehicle-image {
+    transform: scale(1.05);
+}
+
+.price-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(45deg, var(--success-color), #20c997);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.year-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.vehicle-details .badge {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+}
+
+/* Vehicle Detail Page */
+.vehicle-detail-image {
+    height: 400px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.price-display {
+    font-size: 2rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.spec-item .row {
+    border-bottom: 1px solid #eee;
+    padding: 0.5rem 0;
+}
+
+.spec-item .row:last-child {
+    border-bottom: none;
+}
+
+/* Admin Dashboard */
+.stat-card {
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.vehicle-admin-card {
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.vehicle-admin-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.admin-vehicle-image {
+    height: 200px;
+    object-fit: cover;
+}
+
+.price-badge-admin {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--success-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* Forms */
+.form-label {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Stock Images */
+.stock-image-preview {
+    height: 100px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.stock-image-preview:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background: linear-gradient(45deg, var(--success-color), #20c997);
+    border: none;
+}
+
+.btn-success:hover {
+    background: linear-gradient(45deg, #157347, #1aa179);
+}
+
+.btn-warning {
+    background: linear-gradient(45deg, var(--warning-color), #ffcd39);
+    border: none;
+    color: var(--dark-color);
+}
+
+.btn-warning:hover {
+    background: linear-gradient(45deg, #cc9a06, #d4a10b);
+    color: var(--dark-color);
+}
+
+/* WhatsApp Button Special Styling */
+.btn-success[href*="whatsapp"],
+.btn-success[href*="wa.me"] {
+    background: linear-gradient(45deg, #25D366, #20c997);
+    border: none;
+}
+
+.btn-success[href*="whatsapp"]:hover,
+.btn-success[href*="wa.me"]:hover {
+    background: linear-gradient(45deg, #1ea952, #1aa179);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        text-align: center;
+    }
+
+    .hero-section .display-4 {
+        font-size: 2rem;
+    }
+
+    .vehicle-image {
+        height: 200px;
+    }
+
+    .vehicle-detail-image {
+        height: 300px;
+    }
+
+    .price-display {
+        font-size: 1.5rem;
+    }
+}
+
+/* Loading states */
+.btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn.loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0854d0;
+}
+
+/* Animation for new content */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.vehicle-card {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.vehicle-card:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.vehicle-card:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.vehicle-card:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+/* Free Publication Styles - Simplified */
+.free-publication-simple {
+    border: 2px solid #e2e8f0;
+    background: #ffffff;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.free-badge-simple {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.free-title {
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
+
+.free-price {
+    color: #059669;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.free-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    padding: 0.3rem 0;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.detail-item i {
+    width: 16px;
+    text-align: center;
+}
+
+.vehicle-plus-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #1f2937;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(251, 191, 36, 0.4);
+    z-index: 10;
+}
+
+/* Department badge positioning */
+.vehicle-department-badge {
+    position: absolute;
+    top: 45px;
+    right: 10px;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    z-index: 9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Carousel controls for vehicle cards */
+.vehicle-carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    border-radius: 50%;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.vehicle-carousel-control:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.vehicle-carousel-control .carousel-control-prev-icon,
+.vehicle-carousel-control .carousel-control-next-icon {
+    width: 12px;
+    height: 12px;
+}
+
+.vehicle-carousel-control.carousel-control-prev {
+    left: 10px;
+}
+
+.vehicle-carousel-control.carousel-control-next {
+    right: 10px;
+}
+
+/* Show carousel controls on hover */
+.vehicle-card:hover .vehicle-carousel-control {
+    opacity: 1;
+}
+
+/* Admin Sidebar Styles */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    width: 250px;
+    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: #1f2937 !important;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.admin-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    min-height: 100vh;
+    padding: 0;
+}
+
+.sidebar-header {
+    background-color: #111827;
+}
+
+.sidebar-nav {
+    padding: 1rem 0;
+}
+
+.sidebar-nav .nav-link {
+    color: #d1d5db;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0;
+    transition: all 0.3s ease;
+}
+
+.sidebar-nav .nav-link:hover {
+    background-color: #374151;
+    color: #ffffff;
+    transform: translateX(5px);
+}
+
+.sidebar-nav .nav-link.active {
+    background-color: #2563eb;
+    color: #ffffff;
+    border-left: 4px solid #3b82f6;
+}
+
+.sidebar-nav .nav-link i {
+    width: 20px;
+    text-align: center;
+}
+
+.nav-divider {
+    height: 1px;
+    background-color: #374151;
+    margin: 1rem 0;
+}
+
+.sidebar-nav .text-danger:hover {
+    background-color: #dc2626;
+    color: #ffffff !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        width: 100%;
+        position: relative;
+    }
+    
+    .admin-content {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+/* Free publication hover effects */
+.free-publication-simple:hover {
+    border-color: #10b981;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+}
+
+.free-publication-simple:hover .free-badge-simple {
+    background: linear-gradient(135deg, #059669, #047857);
+    transform: scale(1.05);
+}
+
+/* Plus publication hover effects */
+.vehicle-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
+    transition: all 0.3s ease;
+}
+
+/* Responsive adjustments for free publications */
+@media (max-width: 768px) {
+    .free-publication-simple .card-body {
+        padding: 1.5rem !important;
+    }
+
+    .free-title {
+        font-size: 1rem;
+    }
+
+    .free-price {
+        font-size: 1.3rem;
+    }
+
+    .free-badge-simple {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    .detail-item {
+        font-size: 0.85rem;
+    }
+}
+
+/* Currency Colors */
+.price-ars {
+    color: #17a2b8 !important;
+    /* Celeste para ARS */
+}
+
+.price-usd {
+    color: #28a745 !important;
+    /* Verde para USD */
+}
+
+.price-badge-ars {
+    background: linear-gradient(135deg, #17a2b8, #138496) !important;
+    color: white !important;
+}
+
+.price-badge-usd {
+    background: linear-gradient(135deg, #28a745, #1e7e34) !important;
+    color: white !important;
+}
+
+/* Vehicle Card Link Styles */
+.vehicle-card-link {
+    display: block;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.vehicle-card-link:hover {
+    transform: translateY(-2px);
+    text-decoration: none !important;
+}
+
+.vehicle-card-link:hover .card {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Prevent button clicks from triggering card link */
+.vehicle-card-link .btn {
+    position: relative;
+    z-index: 10;
+}
+
+/* Ensure card content is clickable */
+.vehicle-card-link .card {
+    cursor: pointer;
+}
+
+/* Hover effect for card content */
+.vehicle-card-link:hover .vehicle-title-large,
+.vehicle-card-link:hover .free-title {
+    color: var(--primary-color) !important;
+}

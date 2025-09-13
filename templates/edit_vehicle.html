@@ -1,0 +1,717 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Vehículo - Panel Administrativo{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+    {% include 'admin_sidebar.html' %}
+    
+    <div class="admin-content">
+        <div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-6 fw-bold">
+                        <i class="fas fa-edit me-3 text-warning"></i>Editar Vehículo
+                    </h1>
+                    <p class="text-muted">Modifica la información del vehículo</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary me-2">
+                        <i class="fas fa-arrow-left me-2"></i>Volver al Panel
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-danger" 
+                       onclick="return confirm('¿Estás seguro de que quieres cerrar sesión?')">
+                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <div class="row">
+            <!-- Basic Information -->
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Información Básica
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label for="title" class="form-label">
+                                    <i class="fas fa-heading me-2"></i>Título del Anuncio *
+                                </label>
+                                <input type="text" class="form-control" id="title" name="title" 
+                                       value="{{ vehicle.title }}" required>
+                                <div class="invalid-feedback">Por favor ingresa un título.</div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="price" class="form-label">
+                                    <i class="fas fa-dollar-sign me-2"></i>Precio *
+                                </label>
+                                <input type="text" class="form-control" id="price" name="price" 
+                                       value="{{ '{:,}'.format(vehicle.price).replace(',', '.') }}" required>
+                                <div class="invalid-feedback">Por favor ingresa un precio válido.</div>
+                            </div>
+                            
+                            <div class="col-md-2 mb-3">
+                                <label for="currency" class="form-label">
+                                    <i class="fas fa-coins me-2"></i>Moneda *
+                                </label>
+                                <select class="form-select" id="currency" name="currency" required>
+                                    <option value="ARS" {{ "selected" if vehicle.currency == "ARS" else "" }}>ARS</option>
+                                    <option value="USD" {{ "selected" if vehicle.currency == "USD" else "" }}>USD</option>
+                                </select>
+                                <div class="invalid-feedback">Selecciona la moneda.</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3" id="year-field">
+                                <label for="year" class="form-label">
+                                    <i class="fas fa-calendar me-2"></i>Año
+                                </label>
+                                <input type="number" class="form-control" id="year" name="year" 
+                                       value="{{ vehicle.year or '' }}" min="1900" max="2025">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3" id="brand-field">
+                                <label for="brand" class="form-label">
+                                    <i class="fas fa-tag me-2"></i>Marca
+                                </label>
+                                <input type="text" class="form-control" id="brand" name="brand" 
+                                       value="{{ vehicle.brand or '' }}">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3" id="model-field">
+                                <label for="model" class="form-label">
+                                    <i class="fas fa-car me-2"></i>Modelo
+                                </label>
+                                <input type="text" class="form-control" id="model" name="model" 
+                                       value="{{ vehicle.model or '' }}">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3" id="kilometers-field">
+                                <label for="kilometers" class="form-label">
+                                    <i class="fas fa-road me-2"></i>Kilómetros
+                                </label>
+                                <input type="text" class="form-control" id="kilometers" name="kilometers" 
+                                       value="{{ '{:,}'.format(vehicle.kilometers).replace(',', '.') if vehicle.kilometers else '' }}">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3" id="fuel-type-field">
+                                <label for="fuel_type" class="form-label">
+                                    <i class="fas fa-gas-pump me-2"></i>Combustible
+                                </label>
+                                <select class="form-select" id="fuel_type" name="fuel_type">
+                                    <option value="">Seleccionar...</option>
+                                    <option value="Nafta" {% if vehicle.fuel_type == 'Nafta' %}selected{% endif %}>Nafta</option>
+                                    <option value="Diesel" {% if vehicle.fuel_type == 'Diesel' %}selected{% endif %}>Diesel</option>
+                                    <option value="GNC" {% if vehicle.fuel_type == 'GNC' %}selected{% endif %}>GNC</option>
+                                    <option value="Híbrido" {% if vehicle.fuel_type == 'Híbrido' %}selected{% endif %}>Híbrido</option>
+                                    <option value="Eléctrico" {% if vehicle.fuel_type == 'Eléctrico' %}selected{% endif %}>Eléctrico</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3" id="transmission-field">
+                                <label for="transmission" class="form-label">
+                                    <i class="fas fa-cogs me-2"></i>Transmisión
+                                </label>
+                                <select class="form-select" id="transmission" name="transmission">
+                                    <option value="">Seleccionar...</option>
+                                    <option value="Manual" {% if vehicle.transmission == 'Manual' %}selected{% endif %}>Manual</option>
+                                    <option value="Automática" {% if vehicle.transmission == 'Automática' %}selected{% endif %}>Automática</option>
+                                    <option value="CVT" {% if vehicle.transmission == 'CVT' %}selected{% endif %}>CVT</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3" id="color-field">
+                                <label for="color" class="form-label">
+                                    <i class="fas fa-palette me-2"></i>Color
+                                </label>
+                                <input type="text" class="form-control" id="color" name="color" 
+                                       value="{{ vehicle.color or '' }}">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3" id="tire-condition-field">
+                                <label for="tire_condition" class="form-label">
+                                    <i class="fas fa-circle me-2"></i>Estado de Cubiertas
+                                </label>
+                                <select class="form-select" id="tire_condition" name="tire_condition">
+                                    <option value="">Seleccionar...</option>
+                                    <option value="excelente" {{ 'selected' if vehicle.tire_condition == 'excelente' else '' }}>Excelente</option>
+                                    <option value="muy_bueno" {{ 'selected' if vehicle.tire_condition == 'muy_bueno' else '' }}>Muy Bueno</option>
+                                    <option value="bueno" {{ 'selected' if vehicle.tire_condition == 'bueno' else '' }}>Bueno</option>
+                                    <option value="regular" {{ 'selected' if vehicle.tire_condition == 'regular' else '' }}>Regular</option>
+                                    <option value="malo" {{ 'selected' if vehicle.tire_condition == 'malo' else '' }}>Malo</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-12 mb-3" id="description-field">
+                                <label for="description" class="form-label">
+                                    <i class="fas fa-align-left me-2"></i>Descripción *
+                                </label>
+                                <textarea class="form-control" id="description" name="description" 
+                                          rows="5" required>{{ vehicle.description }}</textarea>
+                                <div class="invalid-feedback">Por favor ingresa una descripción.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Images (Only for Plus plans) -->
+                {% set current_images = vehicle.get_images_list() %}
+                {% if current_images and vehicle.is_plus %}
+                <div class="card mb-4" id="currentImagesSection">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-images me-2"></i>Imágenes Actuales
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for image in current_images %}
+                                <div class="col-md-3 mb-3">
+                                    <img src="{{ image }}" class="img-fluid rounded" style="height: 150px; width: 100%; object-fit: cover;">
+                                    <div class="text-center mt-1">
+                                        <small class="text-muted">Imagen {{ loop.index }}</small>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Replace Images Section (Only for Plus plans) -->
+                <div class="card mb-4" id="replaceImagesSection" data-is-plus="{{ 'true' if vehicle.is_plus else 'false' }}">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-image me-2"></i>Cambiar Imágenes
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <p class="text-muted mb-3">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Selecciona nuevas imágenes para reemplazar las actuales. Si no seleccionas ninguna, se mantendrán las imágenes actuales.
+                            </p>
+                            
+                            <input type="file" class="d-none" 
+                                   id="vehicle_images" name="vehicle_images" 
+                                   accept="image/*">
+                            <button type="button" class="btn btn-primary" id="addImageBtn">
+                                <i class="fas fa-plus me-1"></i>Agregar Imagen
+                            </button>
+                            <div class="form-text mb-3">Máximo 16MB por imagen. Agrega una imagen por vez.</div>
+                            
+                            <!-- Hidden inputs for storing image data -->
+                            <div id="hiddenImagesContainer"></div>
+                        </div>
+                        
+                        <!-- Preview area -->
+                        <div class="mt-4">
+                            <h6 class="fw-bold mb-3">Vista previa de nuevas imágenes:</h6>
+                            <div class="alert alert-info" id="mainImageInfo" style="display: none;">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Imagen Principal:</strong> Haz clic en cualquier imagen para seleccionarla como imagen principal del perfil.
+                            </div>
+                            <div class="row" id="imagePreviewContainer">
+                                <!-- Las previews aparecerán aquí -->
+                            </div>
+                            <input type="hidden" id="mainImageIndex" name="main_image_index" value="{{ vehicle.main_image_index or 0 }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact & Actions -->
+            <div class="col-lg-4">
+                <!-- Plan Type -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-crown me-2"></i>Tipo de Plan
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="is_plus" class="form-label">
+                                <i class="fas fa-star me-2"></i>Plan de Publicación *
+                            </label>
+                            <select class="form-select" id="is_plus" name="is_plus" required>
+                                <option value="false" {% if not vehicle.is_plus %}selected{% endif %}>
+                                    <i class="fas fa-gift me-1"></i>Plan Gratuito
+                                </option>
+                                <option value="true" {% if vehicle.is_plus %}selected{% endif %}>
+                                    <i class="fas fa-crown me-1"></i>Plan Plus (Premium)
+                                </option>
+                            </select>
+                            <div class="form-text">
+                                <strong>Plan Gratuito:</strong> Sin imágenes, visibilidad limitada<br>
+                                <strong>Plan Plus:</strong> Con imágenes, visibilidad premium
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info" id="planInfoAlert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong id="planInfoTitle">Plan Premium Activo</strong><br>
+                            <small id="planInfoDescription">Este vehículo tiene visibilidad premium con imágenes.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Information -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user me-2"></i>Información del Usuario
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="user_full_name" class="form-label">
+                                    <i class="fas fa-user me-2"></i>Nombre Completo
+                                </label>
+                                <input type="text" class="form-control" id="user_full_name" name="user_full_name" 
+                                       value="{{ vehicle.full_name or '' }}" placeholder="Juan Pérez">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="user_dni" class="form-label">
+                                    <i class="fas fa-id-card me-2"></i>DNI
+                                </label>
+                                <input type="text" class="form-control" id="user_dni" name="user_dni" 
+                                       value="{{ vehicle.dni or '' }}" placeholder="12.345.678">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="user_email" class="form-label">
+                                    <i class="fas fa-envelope me-2"></i>Email
+                                </label>
+                                <input type="email" class="form-control" id="user_email" name="user_email" 
+                                       value="{{ vehicle.email or '' }}" placeholder="usuario@email.com">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="user_location" class="form-label">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Ubicación
+                                </label>
+                                <input type="text" class="form-control" id="user_location" name="user_location" 
+                                       value="{{ vehicle.location or '' }}" placeholder="Tunuyán, Mendoza">
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="user_address" class="form-label">
+                                    <i class="fas fa-home me-2"></i>Domicilio
+                                </label>
+                                <input type="text" class="form-control" id="user_address" name="user_address" 
+                                       value="{{ vehicle.address or '' }}" placeholder="Calle N° 123, Barrio Centro">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-phone me-2"></i>Información de Contacto
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="whatsapp_number" class="form-label">
+                                    <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                                </label>
+                                <input type="tel" class="form-control" id="whatsapp_number" name="whatsapp_number" 
+                                       value="{{ vehicle.whatsapp_number or '' }}" placeholder="+5491112345678">
+                                <div class="form-text">
+                                    Formato: +54 9 11 1234-5678 (sin espacios ni guiones)
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="call_number" class="form-label">
+                                    <i class="fas fa-phone me-2"></i>Llamada
+                                </label>
+                                <input type="tel" class="form-control" id="call_number" name="call_number" 
+                                       value="{{ vehicle.call_number or '' }}" placeholder="+5491112345678">
+                                <div class="form-text">
+                                    Formato: +54 9 11 1234-5678 (sin espacios ni guiones)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Información de Contacto:</strong> Puedes agregar uno o ambos números. 
+                            Se mostrarán los botones correspondientes según los números que proporciones.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="fas fa-save me-2"></i>Actualizar Vehículo
+                            </button>
+                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+// Image preview functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('vehicle_images');
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const addImageBtn = document.getElementById('addImageBtn');
+    const hiddenImagesContainer = document.getElementById('hiddenImagesContainer');
+    
+    let imageCounter = 0;
+    let images = [];
+    
+    // Add image button functionality
+    addImageBtn.addEventListener('click', function() {
+        imageInput.click();
+    });
+    
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file size (16MB max)
+            if (file.size > 16 * 1024 * 1024) {
+                alert('La imagen es demasiado grande. Máximo 16MB por imagen.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = {
+                    id: imageCounter,
+                    file: file,
+                    dataUrl: e.target.result,
+                    name: file.name
+                };
+                
+                images.push(imageData);
+                addImagePreview(imageData);
+                updateHiddenInputs();
+                
+                imageCounter++;
+                
+                // Show the info message when first image is added
+                const mainImageInfo = document.getElementById('mainImageInfo');
+                if (mainImageInfo && images.length === 1) {
+                    mainImageInfo.style.display = 'block';
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Clear the input for next selection
+        this.value = '';
+    });
+    
+    function addImagePreview(imageData) {
+        const previewDiv = document.createElement('div');
+        previewDiv.className = 'col-md-6 col-lg-4 mb-3';
+        previewDiv.id = `preview-${imageData.id}`;
+        
+        const isMainImage = images.length === 1; // First image is main by default
+        
+        previewDiv.innerHTML = `
+            <div class="position-relative image-preview-card" data-index="${imageData.id}">
+                <img src="${imageData.dataUrl}" class="img-fluid rounded border image-selectable" 
+                     style="height: 200px; width: 100%; object-fit: cover; cursor: pointer; transition: all 0.3s ease;"
+                     onclick="selectMainImage(${imageData.id})">
+                <div class="position-absolute top-0 end-0 p-1">
+                    <button type="button" class="btn btn-sm btn-danger" onclick="removeImage(${imageData.id})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="main-image-badge position-absolute ${isMainImage ? '' : 'd-none'}" 
+                     style="top: 5px; left: 5px;">
+                    <span class="badge bg-primary">
+                        <i class="fas fa-star me-1"></i>Principal
+                    </span>
+                </div>
+                <div class="text-center mt-1">
+                    <small class="text-muted">${imageData.name}</small>
+                </div>
+            </div>
+        `;
+        
+        previewContainer.appendChild(previewDiv);
+    }
+    
+    function updateHiddenInputs() {
+        hiddenImagesContainer.innerHTML = '';
+        images.forEach((imageData, index) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = `vehicle_images_data_${index}`;
+            input.value = imageData.dataUrl;
+            hiddenImagesContainer.appendChild(input);
+        });
+        
+        // Update main image index
+        const mainImageIndexInput = document.getElementById('mainImageIndex');
+        if (mainImageIndexInput && images.length > 0) {
+            const mainImageBadge = document.querySelector('.main-image-badge:not(.d-none)');
+            if (mainImageBadge) {
+                const mainCard = mainImageBadge.closest('.image-preview-card');
+                const mainIndex = parseInt(mainCard.getAttribute('data-index'));
+                const actualIndex = images.findIndex(img => img.id === mainIndex);
+                mainImageIndexInput.value = actualIndex >= 0 ? actualIndex : 0;
+            }
+        }
+    }
+    
+    window.removeImage = function(imageId) {
+        // Remove from images array
+        images = images.filter(img => img.id !== imageId);
+        
+        // Remove preview
+        const preview = document.getElementById(`preview-${imageId}`);
+        if (preview) {
+            preview.remove();
+        }
+        
+        // Update hidden inputs
+        updateHiddenInputs();
+        
+        // If no images left, hide info message
+        if (images.length === 0) {
+            const mainImageInfo = document.getElementById('mainImageInfo');
+            if (mainImageInfo) {
+                mainImageInfo.style.display = 'none';
+            }
+        } else if (images.length === 1) {
+            // If only one image left, make it main
+            selectMainImage(images[0].id);
+        }
+    };
+    
+    window.selectMainImage = function(imageId) {
+        // Remove main badge from all images
+        document.querySelectorAll('.main-image-badge').forEach(badge => {
+            badge.classList.add('d-none');
+        });
+        
+        // Add main badge to selected image
+        const selectedCard = document.querySelector(`[data-index="${imageId}"]`);
+        if (selectedCard) {
+            const badge = selectedCard.querySelector('.main-image-badge');
+            if (badge) {
+                badge.classList.remove('d-none');
+            }
+        }
+        
+        // Update hidden input
+        updateHiddenInputs();
+    };
+});
+
+// Select main image function
+function selectMainImage(imageIndex) {
+    // Remove main image badge from all images
+    document.querySelectorAll('.main-image-badge').forEach(badge => {
+        badge.classList.add('d-none');
+    });
+    
+    // Remove selected visual effect from all images
+    const allImages = document.querySelectorAll('.image-selectable');
+    allImages.forEach(img => {
+        img.style.border = '1px solid #dee2e6';
+        img.style.boxShadow = 'none';
+    });
+    
+    // Add main image badge to selected image
+    const selectedCard = document.querySelector(`[data-index="${imageIndex}"]`);
+    if (selectedCard) {
+        const badge = selectedCard.querySelector('.main-image-badge');
+        if (badge) badge.classList.remove('d-none');
+        
+        // Add visual selected effect
+        const img = selectedCard.querySelector('.image-selectable');
+        if (img) {
+            img.style.border = '3px solid #007bff';
+            img.style.boxShadow = '0 0 10px rgba(0, 123, 255, 0.3)';
+        }
+    }
+    
+    // Update hidden input value
+    const mainImageIndexInput = document.getElementById('mainImageIndex');
+    if (mainImageIndexInput) {
+        mainImageIndexInput.value = imageIndex;
+    }
+}
+
+// Plan type change handler
+document.addEventListener('DOMContentLoaded', function() {
+    const planSelect = document.getElementById('is_plus');
+    const currentImagesSection = document.getElementById('currentImagesSection');
+    const replaceImagesSection = document.getElementById('replaceImagesSection');
+    const planInfoAlert = document.getElementById('planInfoAlert');
+    const planInfoTitle = document.getElementById('planInfoTitle');
+    const planInfoDescription = document.getElementById('planInfoDescription');
+    
+    // Initialize replaceImagesSection visibility based on data attribute
+    if (replaceImagesSection) {
+        const isPlus = replaceImagesSection.getAttribute('data-is-plus') === 'true';
+        replaceImagesSection.style.display = isPlus ? 'block' : 'none';
+    }
+    
+    function toggleImageSections() {
+        const isPlus = planSelect.value === 'true';
+        
+        // Mostrar/ocultar secciones de imágenes
+        if (currentImagesSection) {
+            currentImagesSection.style.display = isPlus ? 'block' : 'none';
+        }
+        
+        if (replaceImagesSection) {
+            replaceImagesSection.style.display = isPlus ? 'block' : 'none';
+        }
+        
+        // Campos adicionales que se ocultan en plan gratuito
+        const additionalFields = [
+            'year-field', 'brand-field', 'model-field', 'kilometers-field', 
+            'fuel-type-field', 'transmission-field', 'color-field', 'tire-condition-field', 'description-field'
+        ];
+        
+        additionalFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.style.display = isPlus ? 'block' : 'none';
+            }
+        });
+        
+        // Actualizar alerta informativa
+        if (planInfoAlert && planInfoTitle && planInfoDescription) {
+            if (isPlus) {
+                planInfoAlert.className = 'alert alert-info';
+                planInfoTitle.textContent = 'Plan Premium Activo';
+                planInfoDescription.textContent = 'Este vehículo tiene visibilidad premium con imágenes y toda la información.';
+            } else {
+                planInfoAlert.className = 'alert alert-warning';
+                planInfoTitle.textContent = 'Plan Gratuito';
+                planInfoDescription.textContent = 'Plan gratuito: solo se muestran título, precio y moneda. Los demás campos no son visibles para los usuarios.';
+            }
+        }
+        
+        // Si cambia a plan gratuito, limpiar las imágenes seleccionadas y campos opcionales
+        if (!isPlus) {
+            const imageInput = document.getElementById('vehicle_images');
+            if (imageInput) {
+                imageInput.value = '';
+            }
+            
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            if (previewContainer) {
+                previewContainer.innerHTML = '';
+            }
+            
+            // Limpiar campos opcionales cuando se cambia a plan gratuito
+            const descriptionField = document.getElementById('description');
+            if (descriptionField) {
+                descriptionField.removeAttribute('required');
+            }
+        } else {
+            // Requerir descripción para plan premium
+            const descriptionField = document.getElementById('description');
+            if (descriptionField) {
+                descriptionField.setAttribute('required', '');
+            }
+        }
+    }
+    
+    // Event listener para el cambio de plan
+    if (planSelect) {
+        planSelect.addEventListener('change', toggleImageSections);
+        
+        // Aplicar el estado inicial
+        toggleImageSections();
+    }
+});
+
+// Number formatting function
+function formatNumber(input) {
+    // Remove all non-numeric characters
+    let value = input.value.replace(/\D/g, '');
+    
+    // Format with dots as thousand separators
+    if (value) {
+        value = parseInt(value, 10).toLocaleString('es-AR').replace(/,/g, '.');
+    }
+    
+    input.value = value;
+}
+
+// Add number formatting to price and kilometers fields
+document.addEventListener('DOMContentLoaded', function() {
+    const priceInput = document.getElementById('price');
+    const kilometersInput = document.getElementById('kilometers');
+    
+    if (priceInput) {
+        priceInput.addEventListener('input', function() {
+            formatNumber(this);
+        });
+    }
+    
+    if (kilometersInput) {
+        kilometersInput.addEventListener('input', function() {
+            formatNumber(this);
+        });
+    }
+});
+
+// Bootstrap form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
+
+<style>
+.image-preview-card {
+    transition: all 0.3s ease;
+}
+
+.image-preview-card:hover {
+    transform: translateY(-2px);
+}
+
+.image-selectable:hover {
+    opacity: 0.8;
+    border: 2px solid #007bff !important;
+}
+
+.main-image-badge {
+    z-index: 10;
+}
+</style>
+        </div>
+    </div>
+</div>
+{% endblock %}

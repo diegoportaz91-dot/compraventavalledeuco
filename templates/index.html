@@ -1,0 +1,622 @@
+{% extends "base.html" %}
+
+{% block title %}Marketplace Valle de Uco{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section-blue text-white py-0">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-0">
+                    Encuentra tu próximo vehículo en el Valle de Uco
+                </h1>
+                <p class="lead mb-4">
+                    La plataforma local y digital más confiable para comprar y vender autos en Tupungato, Tunuyán y San Carlos
+                </p>
+                
+                <!-- Search Bar -->
+                <div class="search-container mb-4">
+                    <form method="GET" id="searchForm">
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-white border-0">
+                                <i class="fas fa-search text-muted"></i>
+                            </span>
+                            <input type="text" class="form-control border-0" 
+                                   name="search" 
+                                   id="searchInput"
+                                   placeholder="Buscar por marca, modelo..."
+                                   value="{{ current_filters.search or '' }}">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search me-2"></i>Buscar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="text-center" style="margin-bottom: 20px;">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-md-auto">
+                            <div class="d-flex flex-column flex-md-row gap-2 justify-content-center">
+                                <a href="{{ url_for('client_request') }}" class="btn btn-light btn-sm">
+                                    <i class="fas fa-plus me-1"></i>Publicar mi Auto
+                                </a>
+                                <a href="{{ url_for('gestores') }}" class="btn btn-outline-light btn-sm">
+                                    <i class="fas fa-users me-1"></i>Gestor Automotor
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Permanent Information Banner -->
+<div class="permanent-info-banner" id="permanentInfoBanner">
+    <div class="banner-content">
+        <!-- Background Image -->
+        <div class="banner-background">
+            <div class="banner-gradient"></div>
+        </div>
+        
+        <!-- Content -->
+        <div class="banner-main-content">
+            <div class="banner-text">
+                <div class="banner-badge">
+                    <i class="fas fa-rocket"></i>
+                    Servicios Digitales
+                </div>
+                <h4 class="banner-title">
+                    ¡Páginas Web & Servicio Técnico PC!
+                </h4>
+                <p class="banner-description">
+                    Desarrollamos sitios web profesionales y brindamos servicio técnico especializado para computadoras.
+                    <strong>¡Soluciones digitales completas!</strong>
+                </p>
+                <div class="banner-features">
+                    <span class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        Páginas Web
+                    </span>
+                    <span class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        Servicio Técnico PC
+                    </span>
+                    <span class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        Reparación & Mantenimiento
+                    </span>
+                </div>
+            </div>
+            
+            <div class="banner-visual">
+                <div class="banner-icon-container">
+                    <div class="floating-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <div class="floating-icon delay-1">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="floating-icon delay-2">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="banner-actions">
+            <a href="https://wa.me/542622581554?text=Hola!%20Me%20interesa%20crear%20una%20p%C3%A1gina%20web%20para%20mi%20negocio.%20¿Podr%C3%ADas%20darme%20m%C3%A1s%20informaci%C3%B3n?" 
+               target="_blank" 
+               class="banner-button">
+                <i class="fab fa-whatsapp"></i>
+                <span>Consultar Ahora</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+            <button type="button" class="banner-close" onclick="document.getElementById('permanentInfoBanner').style.display='none'">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Filters Section -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <form id="filterForm" method="GET">
+            <div class="row align-items-center mb-3">
+                <div class="col-md-2">
+                    <button class="btn btn-outline-secondary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse">
+                        <i class="fas fa-filter me-2"></i>Filtros Avanzados
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" name="price_range" id="priceRange">
+                        <option value="">Todos los precios</option>
+                        <option value="1000000-5000000" {% if current_filters.price_min == 1000000 and current_filters.price_max == 5000000 %}selected{% endif %}>$1.000.000 - $5.000.000</option>
+                        <option value="5000000-10000000" {% if current_filters.price_min == 5000000 and current_filters.price_max == 10000000 %}selected{% endif %}>$5.000.000 - $10.000.000</option>
+                        <option value="10000000-15000000" {% if current_filters.price_min == 10000000 and current_filters.price_max == 15000000 %}selected{% endif %}>$10.000.000 - $15.000.000</option>
+                        <option value="15000000-999999999" {% if current_filters.price_min == 15000000 %}selected{% endif %}>Más de $15.000.000</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" name="brand" id="brandFilter">
+                        <option value="">Todas las marcas</option>
+                        {% for brand in brands %}
+                        <option value="{{ brand }}" {% if current_filters.brand == brand %}selected{% endif %}>{{ brand }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" name="year_range" id="yearRange">
+                        <option value="">Todos los años</option>
+                        <option value="2021-2024" {% if current_filters.year_min == 2021 and current_filters.year_max == 2024 %}selected{% endif %}>2021 o más</option>
+                        <option value="2016-2020" {% if current_filters.year_min == 2016 and current_filters.year_max == 2020 %}selected{% endif %}>2016-2020</option>
+                        <option value="2010-2015" {% if current_filters.year_min == 2010 and current_filters.year_max == 2015 %}selected{% endif %}>Hasta 2015</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" name="location" id="locationFilter">
+                        <option value="">Todo el Valle</option>
+                        <option value="Tupungato" {% if current_filters.location == 'Tupungato' %}selected{% endif %}>Tupungato</option>
+                        <option value="Tunuyán" {% if current_filters.location == 'Tunuyán' %}selected{% endif %}>Tunuyán</option>
+                        <option value="San Carlos" {% if current_filters.location == 'San Carlos' %}selected{% endif %}>San Carlos</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-2"></i>Filtrar
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Collapsible Filters -->
+            <div class="collapse mt-3" id="filtersCollapse">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Combustible</label>
+                        <select class="form-select" name="fuel_type" id="fuelType">
+                            <option value="">Todos</option>
+                            <option value="Nafta" {% if current_filters.fuel_type == 'Nafta' %}selected{% endif %}>Nafta</option>
+                            <option value="Diesel" {% if current_filters.fuel_type == 'Diesel' %}selected{% endif %}>Diesel</option>
+                            <option value="GNC" {% if current_filters.fuel_type == 'GNC' %}selected{% endif %}>GNC</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Transmisión</label>
+                        <select class="form-select" name="transmission" id="transmissionFilter">
+                            <option value="">Todas</option>
+                            <option value="Manual" {% if current_filters.transmission == 'Manual' %}selected{% endif %}>Manual</option>
+                            <option value="Automática" {% if current_filters.transmission == 'Automática' %}selected{% endif %}>Automática</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Kilómetros</label>
+                        <select class="form-select" name="km_range" id="kmRange">
+                            <option value="">Todos</option>
+                            <option value="0-50000" {% if current_filters.km_min == 0 and current_filters.km_max == 50000 %}selected{% endif %}>Hasta 50.000 km</option>
+                            <option value="50000-100000" {% if current_filters.km_min == 50000 and current_filters.km_max == 100000 %}selected{% endif %}>50.000 - 100.000 km</option>
+                            <option value="100000-999999999" {% if current_filters.km_min == 100000 %}selected{% endif %}>Más de 100.000 km</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="button" class="btn btn-outline-danger w-100" id="clearFilters">
+                            <i class="fas fa-times me-2"></i>Limpiar Filtros
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Popular Profiles Section -->
+<section class="py-3 bg-white border-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h6 class="mb-3 fw-bold text-muted">
+                    <i class="fas fa-fire text-danger me-2"></i>Perfiles Más Vistos
+                </h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                {% if most_viewed_vehicles %}
+                    <div class="most-viewed-carousel">
+                        <div class="d-flex gap-3 overflow-auto pb-2" style="scroll-behavior: smooth;">
+                            {% for vehicle_data in most_viewed_vehicles %}
+                                {% set vehicle = vehicle_data[0] %}
+                                {% set view_count = vehicle_data[1] %}
+                                <div class="flex-shrink-0">
+                                    <a href="{{ url_for('vehicle_detail', id=vehicle.id) }}" 
+                                       class="text-decoration-none">
+                                        <div class="most-viewed-card">
+                                            <div class="position-relative">
+                                                {% if vehicle.get_main_image() %}
+                                                    <img src="{{ vehicle.get_main_image() }}" 
+                                                         class="most-viewed-image" 
+                                                         alt="{{ vehicle.title }}"
+                                                         onerror="this.src='{{ url_for('static', filename='placeholder-car.png') }}'">
+                                                {% else %}
+                                                    <img src="{{ url_for('static', filename='placeholder-car.png') }}" 
+                                                         class="most-viewed-image" 
+                                                         alt="{{ vehicle.title }}">
+                                                {% endif %}
+                                                <div class="most-viewed-views">
+                                                    <i class="fas fa-eye me-1"></i>{{ view_count }}
+                                                </div>
+                                            </div>
+                                            <div class="most-viewed-content">
+                                                <h6 class="most-viewed-title">{{ vehicle.title }}</h6>
+                                                <div class="most-viewed-price {{ vehicle.get_currency_class() }}">{{ vehicle.format_price_with_currency() }}</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-center py-3">
+                        <p class="text-muted mb-0">No hay datos de visualizaciones aún</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Vehicles Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="fw-bold mb-0">
+                        Disponibles ({{ pagination.total_vehicles }})
+                    </h3>
+                    <div class="text-muted">
+                        Página {{ pagination.page }} de {{ pagination.total_pages }}
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        {% if vehicles %}
+            <!-- Vehicles Grid -->
+            <div class="row">
+                {% for vehicle in vehicles %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        {% if vehicle.is_plus %}
+                        <!-- Plus publication with full layout -->
+                        <div class="card vehicle-card h-100 shadow-sm">
+                            {% set images = vehicle.get_images_list() %}
+                            {% if images %}
+                            <div class="position-relative">
+                                <!-- Carousel for plus vehicles -->
+                                <div id="carousel{{ vehicle.id }}" class="carousel slide" data-bs-ride="false">
+                                    <div class="carousel-inner">
+                                        {% for image in images %}
+                                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                            <a href="{{ url_for('vehicle_detail', id=vehicle.id) }}" class="text-decoration-none">
+                                                <img src="{{ image }}" 
+                                                     class="card-img-top vehicle-image" 
+                                                     alt="{{ vehicle.title }}"
+                                                     onerror="this.src='{{ url_for('static', filename='placeholder-car.png') }}'">
+                                            </a>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    <!-- Carousel controls -->
+                                    {% if images|length > 1 %}
+                                    <button class="carousel-control-prev vehicle-carousel-control" type="button" data-bs-target="#carousel{{ vehicle.id }}" data-bs-slide="prev" onclick="event.stopPropagation();">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Anterior</span>
+                                    </button>
+                                    <button class="carousel-control-next vehicle-carousel-control" type="button" data-bs-target="#carousel{{ vehicle.id }}" data-bs-slide="next" onclick="event.stopPropagation();">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Siguiente</span>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Photo count badge -->
+                                {% set images_count = images|length %}
+                                {% if images_count > 1 %}
+                                <div class="vehicle-photos-badge">
+                                    <i class="fas fa-camera me-1"></i>{{ images_count }} fotos
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Plus badge (top-left) -->
+                                <div class="vehicle-plus-badge">
+                                    <i class="fas fa-star me-1"></i>Plus
+                                </div>
+                                
+                                <!-- Department badge -->
+                                <div class="vehicle-department-badge {{ vehicle.get_location().lower().replace(' ', '-') }}">
+                                    <i class="fas fa-map-marker-alt me-1"></i>{{ vehicle.get_location() }}
+                                </div>
+                            </div>
+                            {% else %}
+                            <!-- Plus publication without image -->
+                            <div class="position-relative">
+                                <a href="{{ url_for('vehicle_detail', id=vehicle.id) }}" class="text-decoration-none">
+                                    <div class="card-img-top vehicle-image d-flex align-items-center justify-content-center bg-light">
+                                        <div class="text-center">
+                                            <i class="fas fa-car text-muted" style="font-size: 3rem;"></i>
+                                            <p class="text-muted mt-2 mb-0">Sin imagen</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                
+                                <!-- Plus badge (top-left) -->
+                                <div class="vehicle-plus-badge">
+                                    <i class="fas fa-star me-1"></i>Plus
+                                </div>
+                                
+                                <!-- Department badge -->
+                                <div class="vehicle-department-badge {{ vehicle.get_location().lower().replace(' ', '-') }}">
+                                    <i class="fas fa-map-marker-alt me-1"></i>{{ vehicle.get_location() }}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="card-body d-flex flex-column p-3">
+                                <!-- Vehicle Title -->
+                                <h5 class="vehicle-title-large">{{ vehicle.title }}</h5>
+                                
+                                <!-- Price prominently displayed -->
+                                <div class="vehicle-price-large mb-2 {{ vehicle.get_currency_class() }}">
+                                    {{ vehicle.format_price_with_currency() }}
+                                </div>
+                                
+                                <!-- Key details in smaller text -->
+                                <div class="text-muted mb-3" style="font-size: 0.9rem;">
+                                    {% if vehicle.year %}{{ vehicle.year }}{% endif %}
+                                    {% if vehicle.kilometers %} • {{ "{:,}".format(vehicle.kilometers).replace(",", ".") }} km{% endif %}
+                                    {% if vehicle.fuel_type %} • {{ vehicle.fuel_type }}{% endif %}
+                                </div>
+                                
+                                <div class="mt-auto">
+                                    <div class="d-grid gap-2">
+                                        <div class="row g-1">
+                                            <div class="col-12">
+                                                {% if vehicle.contact_type == 'whatsapp' %}
+                                                    <a href="{{ url_for('track_click', vehicle_id=vehicle.id, click_type='whatsapp') }}" 
+                                                       class="btn btn-success btn-sm w-100"
+                                                       target="_blank">
+                                                        <i class="fab fa-whatsapp me-1"></i>Contacto WhatsApp
+                                                    </a>
+                                                {% else %}
+                                                    <a href="tel:{{ vehicle.get_contact_number() }}" 
+                                                       class="btn btn-success btn-sm w-100"
+                                                       data-vehicle-id="{{ vehicle.id }}"
+                                                       onclick="trackCallClick(this.dataset.vehicleId)">
+                                                        <i class="fas fa-phone me-1"></i>Llamar Ahora
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                        {% else %}
+                        <!-- Free publication - simplified layout -->
+                        <a href="{{ url_for('vehicle_detail', id=vehicle.id) }}" class="text-decoration-none vehicle-card-link">
+                        <div class="card free-publication-simple h-100 shadow-sm">
+                            <!-- Image for free publications -->
+                            <div class="position-relative">
+                                {% if vehicle.get_images_list() %}
+                                    <img src="{{ vehicle.get_main_image() }}" 
+                                         class="card-img-top vehicle-image" 
+                                         alt="{{ vehicle.title }}"
+                                         style="height: 200px; object-fit: cover;"
+                                         onerror="this.src='{{ url_for('static', filename='placeholder-car.png') }}'">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='placeholder-car.png') }}" 
+                                         class="card-img-top vehicle-image" 
+                                         alt="{{ vehicle.title }}"
+                                         style="height: 200px; object-fit: contain; background-color: #f8f9fa;">
+                                {% endif %}
+                                
+                                <!-- Free badge -->
+                                <div class="free-badge-simple" style="position: absolute; top: 10px; left: 10px; background: #28a745; color: white; padding: 4px 8px; border-radius: 15px; font-size: 0.75rem;">
+                                    <i class="fas fa-gift me-1"></i>Publicación Gratuita
+                                </div>
+                                
+                                <!-- Department badge for free publications -->
+                                <div class="vehicle-department-badge {{ vehicle.get_location().lower().replace(' ', '-') }}" style="position: absolute; top: 10px; right: 10px;">
+                                    <i class="fas fa-map-marker-alt me-1"></i>{{ vehicle.get_location() }}
+                                </div>
+                            </div>
+                            
+                            <div class="card-body p-4">
+                                <!-- Vehicle Title -->
+                                <h5 class="free-title mb-3">{{ vehicle.title }}</h5>
+                                
+                                <!-- Price prominently displayed -->
+                                <div class="free-price mb-3 {{ vehicle.get_currency_class() }}">
+                                    {{ vehicle.format_price_with_currency() }}
+                                </div>
+                                
+                                <!-- Dynamic contact buttons -->
+                                <div class="free-contact-buttons">
+                                    {% set contact_buttons = vehicle.get_contact_buttons() %}
+                                    {% if contact_buttons|length == 1 %}
+                                        {% for button in contact_buttons %}
+                                            {% if button.type == 'whatsapp' %}
+                                                <a href="https://wa.me/{{ button.number }}?text={{ vehicle.get_whatsapp_contact_message()|urlencode }}" 
+                                                   class="btn {{ button.class }} w-100"
+                                                   target="_blank"
+                                                   onclick="event.stopPropagation()">
+                                                    <i class="{{ button.icon }} me-1"></i>{{ button.text }}
+                                                </a>
+                                            {% else %}
+                                                <a href="tel:{{ button.number }}" 
+                                                   class="btn {{ button.class }} w-100"
+                                                   data-vehicle-id="{{ vehicle.id }}"
+                                                   onclick="trackCallClick(this.dataset.vehicleId); event.stopPropagation()">
+                                                    <i class="{{ button.icon }} me-1"></i>{{ button.text }}
+                                                </a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% elif contact_buttons|length == 2 %}
+                                        <div class="row g-2">
+                                            {% for button in contact_buttons %}
+                                                <div class="col-6">
+                                                    {% if button.type == 'whatsapp' %}
+                                                        <a href="https://wa.me/{{ button.number }}?text={{ vehicle.get_whatsapp_contact_message()|urlencode }}" 
+                                                           class="btn {{ button.class }} w-100 btn-sm"
+                                                           target="_blank"
+                                                           onclick="event.stopPropagation()">
+                                                            <i class="{{ button.icon }} me-1"></i>{{ button.text }}
+                                                        </a>
+                                                    {% else %}
+                                                        <a href="tel:{{ button.number }}" 
+                                                           class="btn {{ button.class }} w-100 btn-sm"
+                                                           data-vehicle-id="{{ vehicle.id }}"
+                                                           onclick="trackCallClick(this.dataset.vehicleId); event.stopPropagation()">
+                                                            <i class="{{ button.icon }} me-1"></i>{{ button.text }}
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="alert alert-warning text-center">
+                                            <i class="fas fa-exclamation-triangle me-1"></i>
+                                            Sin información de contacto
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if pagination.total_pages > 1 %}
+            <div class="row mt-4">
+                <div class="col-12">
+                    <nav aria-label="Navegación de vehículos">
+                        <ul class="pagination justify-content-center">
+                            <!-- Previous button -->
+                            {% if pagination.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('index', page=pagination.prev_num, **current_filters) }}">
+                                        <i class="fas fa-chevron-left"></i> Anterior
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">
+                                        <i class="fas fa-chevron-left"></i> Anterior
+                                    </span>
+                                </li>
+                            {% endif %}
+                            
+                            <!-- Page numbers -->
+                            {% set start_page = [1, pagination.page - 2]|max %}
+                            {% set end_page = [pagination.total_pages, pagination.page + 2]|min %}
+                            
+                            {% if start_page > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('index', page=1, **current_filters) }}">1</a>
+                                </li>
+                                {% if start_page > 2 %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                            
+                            {% for page_num in range(start_page, end_page + 1) %}
+                                {% if page_num == pagination.page %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ page_num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('index', page=page_num, **current_filters) }}">{{ page_num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if end_page < pagination.total_pages %}
+                                {% if end_page < pagination.total_pages - 1 %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                {% endif %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('index', page=pagination.total_pages, **current_filters) }}">{{ pagination.total_pages }}</a>
+                                </li>
+                            {% endif %}
+                            
+                            <!-- Next button -->
+                            {% if pagination.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('index', page=pagination.next_num, **current_filters) }}">
+                                        Siguiente <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">
+                                        Siguiente <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            {% endif %}
+        {% else %}
+            <div class="row">
+                <div class="col-12 text-center py-5">
+                    <i class="fas fa-car text-muted" style="font-size: 4rem;"></i>
+                    <h3 class="mt-3 text-muted">No hay vehículos disponibles</h3>
+                    <p class="text-muted">Pronto tendremos nuevos vehículos para ti.</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+
+<script>
+// Track call clicks
+function trackCallClick(vehicleId) {
+    fetch(`/track_click/${vehicleId}/call`, {
+        method: 'GET',
+    }).catch(console.error);
+}
+
+// Handle contact button clicks to prevent card link activation
+document.addEventListener('DOMContentLoaded', function() {
+    // Prevent contact buttons from triggering card links
+    const contactButtons = document.querySelectorAll('.vehicle-card-link .btn');
+    contactButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    });
+});
+
+// No JavaScript needed - Banner is completely independent
+</script>
+
+<!-- No JavaScript needed - Banner is completely independent -->
+{% endblock %}

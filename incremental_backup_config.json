@@ -1,0 +1,17 @@
+{
+    "project_path": "C:\\Users\\Diego\\Desktop\\Pagina Web Autos\\backup_system",
+    "backup_base_dir": "backups/incremental",
+    "database_file": "vehicle_marketplace.db",
+    "uploads_dir": "static/uploads",
+    "config_files": [
+        "app.py",
+        "models.py",
+        "routes.py",
+        "requirements.txt",
+        "pyproject.toml",
+        "config_local.py"
+    ],
+    "full_backup_interval_days": 7,
+    "compression_level": 6,
+    "max_incremental_chain": 10
+}

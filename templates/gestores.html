@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block title %}Gestores Automotor - AutoMarket Argentina{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="text-center">
+                <h1 class="display-5 fw-bold">
+                    <i class="fas fa-handshake me-3 text-primary"></i>Gestores Automotor
+                </h1>
+                <p class="lead text-muted">Profesionales especializados en trámites y gestión automotor</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Information Banner -->
+    <div class="alert alert-info alert-permanent mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h6 class="alert-heading mb-2">
+                    <i class="fas fa-info-circle me-2"></i>¿Qué es un Gestor Automotor?
+                </h6>
+                <p class="mb-0">
+                    Los gestores automotor son profesionales especializados en realizar trámites relacionados con vehículos: 
+                    transferencias, patentamientos, verificaciones policiales, seguros y más.
+                </p>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-file-alt text-primary" style="font-size: 3rem;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Gestores -->
+    {% if featured_gestores %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="h3 mb-4">
+                <i class="fas fa-star text-warning me-2"></i>Gestores Destacados
+            </h2>
+            <div class="row">
+                {% for gestor in featured_gestores %}
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="card h-100 shadow-sm border-warning">
+                        <div class="card-header bg-warning text-dark">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-star me-2"></i>
+                                <span class="fw-bold">Destacado</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                {% if gestor.image_filename %}
+                                <div class="col-4">
+                                    <img src="{{ gestor.get_image_url() }}" class="img-fluid rounded-circle" 
+                                         style="width: 80px; height: 80px; object-fit: cover;" 
+                                         alt="{{ gestor.name }}">
+                                </div>
+                                <div class="col-8">
+                                {% else %}
+                                <div class="col-12">
+                                {% endif %}
+                                    <h5 class="card-title mb-1">{{ gestor.name }}</h5>
+                                    {% if gestor.business_name %}
+                                    <p class="text-muted small mb-2">{{ gestor.business_name }}</p>
+                                    {% endif %}
+                                    <p class="text-primary small mb-0">
+                                        <i class="fas fa-map-marker-alt me-1"></i>{{ gestor.location or 'Ubicación no especificada' }}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            {% if gestor.description %}
+                            <p class="card-text mt-3">{{ gestor.description[:150] }}{% if gestor.description|length > 150 %}...{% endif %}</p>
+                            {% endif %}
+                            
+                            {% if gestor.specializations %}
+                            <div class="mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-tools me-1"></i><strong>Especialidades:</strong> {{ gestor.specializations }}
+                                </small>
+                            </div>
+                            {% endif %}
+                            
+                            {% if gestor.years_experience %}
+                            <div class="mb-3">
+                                <small class="text-success">
+                                    <i class="fas fa-award me-1"></i>{{ gestor.format_experience() }}
+                                </small>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer bg-light">
+                            <div class="row g-2">
+                                {% if gestor.whatsapp_number %}
+                                <div class="col-6">
+                                    <a href="{{ gestor.get_whatsapp_contact_url() }}" 
+                                       class="btn btn-success btn-sm w-100" target="_blank">
+                                        <i class="fab fa-whatsapp me-1"></i>WhatsApp
+                                    </a>
+                                </div>
+                                {% endif %}
+                                {% if gestor.phone_number %}
+                                <div class="col-6">
+                                    <a href="{{ gestor.get_phone_contact_url() }}" 
+                                       class="btn btn-primary btn-sm w-100">
+                                        <i class="fas fa-phone me-1"></i>Llamar
+                                    </a>
+                                </div>
+                                {% endif %}
+                                {% if gestor.email %}
+                                <div class="col-12">
+                                    <a href="mailto:{{ gestor.email }}" 
+                                       class="btn btn-outline-secondary btn-sm w-100">
+                                        <i class="fas fa-envelope me-1"></i>{{ gestor.email }}
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Regular Gestores -->
+    {% if regular_gestores %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="h3 mb-4">
+                <i class="fas fa-users me-2"></i>Todos los Gestores
+            </h2>
+            <div class="row">
+                {% for gestor in regular_gestores %}
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="row">
+                                {% if gestor.image_filename %}
+                                <div class="col-4">
+                                    <img src="{{ gestor.get_image_url() }}" class="img-fluid rounded-circle" 
+                                         style="width: 70px; height: 70px; object-fit: cover;" 
+                                         alt="{{ gestor.name }}">
+                                </div>
+                                <div class="col-8">
+                                {% else %}
+                                <div class="col-12">
+                                {% endif %}
+                                    <h5 class="card-title mb-1">{{ gestor.name }}</h5>
+                                    {% if gestor.business_name %}
+                                    <p class="text-muted small mb-2">{{ gestor.business_name }}</p>
+                                    {% endif %}
+                                    <p class="text-primary small mb-0">
+                                        <i class="fas fa-map-marker-alt me-1"></i>{{ gestor.location or 'Ubicación no especificada' }}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            {% if gestor.description %}
+                            <p class="card-text mt-3">{{ gestor.description[:120] }}{% if gestor.description|length > 120 %}...{% endif %}</p>
+                            {% endif %}
+                            
+                            {% if gestor.specializations %}
+                            <div class="mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-tools me-1"></i><strong>Especialidades:</strong> {{ gestor.specializations }}
+                                </small>
+                            </div>
+                            {% endif %}
+                            
+                            {% if gestor.years_experience %}
+                            <div class="mb-3">
+                                <small class="text-success">
+                                    <i class="fas fa-award me-1"></i>{{ gestor.format_experience() }}
+                                </small>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer bg-light">
+                            <div class="row g-2">
+                                {% if gestor.whatsapp_number %}
+                                <div class="col-6">
+                                    <a href="{{ gestor.get_whatsapp_contact_url() }}" 
+                                       class="btn btn-success btn-sm w-100" target="_blank">
+                                        <i class="fab fa-whatsapp me-1"></i>WhatsApp
+                                    </a>
+                                </div>
+                                {% endif %}
+                                {% if gestor.phone_number %}
+                                <div class="col-6">
+                                    <a href="{{ gestor.get_phone_contact_url() }}" 
+                                       class="btn btn-primary btn-sm w-100">
+                                        <i class="fas fa-phone me-1"></i>Llamar
+                                    </a>
+                                </div>
+                                {% endif %}
+                                {% if gestor.email %}
+                                <div class="col-12">
+                                    <a href="mailto:{{ gestor.email }}" 
+                                       class="btn btn-outline-secondary btn-sm w-100">
+                                        <i class="fas fa-envelope me-1"></i>{{ gestor.email }}
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- No Gestores Message -->
+    {% if not featured_gestores and not regular_gestores %}
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-users text-muted" style="font-size: 4rem;"></i>
+                <h3 class="mt-3 text-muted">No hay gestores disponibles</h3>
+                <p class="text-muted">Próximamente tendremos gestores automotor disponibles para ayudarte con tus trámites.</p>
+                <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">
+                    <i class="fas fa-arrow-left me-2"></i>Volver al Inicio
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Services Information -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h4 class="card-title text-center mb-4">
+                        <i class="fas fa-clipboard-list me-2"></i>Servicios que Ofrecen los Gestores
+                    </h4>
+                    <div class="row">
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-exchange-alt text-primary mb-2" style="font-size: 2rem;"></i>
+                                <h6>Transferencias</h6>
+                                <small class="text-muted">Cambio de titularidad de vehículos</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-id-card text-success mb-2" style="font-size: 2rem;"></i>
+                                <h6>Patentamientos</h6>
+                                <small class="text-muted">Primera inscripción de vehículos 0km</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-search text-warning mb-2" style="font-size: 2rem;"></i>
+                                <h6>Verificaciones</h6>
+                                <small class="text-muted">Verificación policial y física</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-shield-alt text-info mb-2" style="font-size: 2rem;"></i>
+                                <h6>Seguros</h6>
+                                <small class="text-muted">Gestión de seguros automotor</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

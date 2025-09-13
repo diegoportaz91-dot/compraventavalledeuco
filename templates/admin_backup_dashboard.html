@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+
+{% block title %}Sistema de Backup - Panel Admin{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+    {% include 'admin_sidebar.html' %}
+    
+    <div class="admin-content">
+        <div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>
+                    <i class="fas fa-shield-alt me-2 text-primary"></i>
+                    Sistema de Backup
+                </h2>
+                <div class="btn-group">
+                    <a href="{{ url_for('admin_backup_interface') }}" target="_blank" class="btn btn-outline-primary">
+                        <i class="fas fa-external-link-alt me-1"></i>Panel Completo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estado del Sistema -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-heartbeat me-2"></i>
+                        Estado del Sistema
+                        <span class="badge ms-2 
+                            {% if backup_status.status == 'healthy' %}bg-success
+                            {% elif backup_status.status == 'warning' %}bg-warning
+                            {% elif backup_status.status == 'critical' %}bg-danger
+                            {% else %}bg-secondary{% endif %}">
+                            {% if backup_status.status == 'healthy' %}Saludable
+                            {% elif backup_status.status == 'warning' %}Advertencia
+                            {% elif backup_status.status == 'critical' %}Crítico
+                            {% elif backup_status.status == 'no_backups' %}Sin Backups
+                            {% else %}Desconocido{% endif %}
+                        </span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="stat-card text-center p-3 bg-light rounded">
+                                <h3 class="text-primary mb-1">{{ backup_status.backup_count }}</h3>
+                                <p class="text-muted mb-0">Total Backups</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card text-center p-3 bg-light rounded">
+                                <h3 class="text-info mb-1">
+                                    {% if backup_status.last_backup %}
+                                        {{ backup_status.last_backup.strftime('%d/%m') }}
+                                    {% else %}
+                                        Nunca
+                                    {% endif %}
+                                </h3>
+                                <p class="text-muted mb-0">Último Backup</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card text-center p-3 bg-light rounded">
+                                <h3 class="{% if backup_status.system_enabled %}text-success{% else %}text-danger{% endif %} mb-1">
+                                    {% if backup_status.system_enabled %}ON{% else %}OFF{% endif %}
+                                </h3>
+                                <p class="text-muted mb-0">Sistema Activo</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acciones Rápidas -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>
+                        Acciones Rápidas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <form method="POST" action="{{ url_for('admin_run_backup') }}" class="d-grid">
+                                <input type="hidden" name="type" value="manual">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-play me-2"></i>
+                                    Backup Manual
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <form method="POST" action="{{ url_for('admin_run_backup') }}" class="d-grid">
+                                <input type="hidden" name="type" value="incremental">
+                                <button type="submit" class="btn btn-info btn-lg">
+                                    <i class="fas fa-layer-group me-2"></i>
+                                    Backup Incremental
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-warning btn-lg w-100" data-bs-toggle="modal" data-bs-target="#restoreModal">
+                                <i class="fas fa-undo me-2"></i>
+                                Restaurar
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ url_for('admin_backup_interface') }}" target="_blank" class="btn btn-secondary btn-lg w-100">
+                                <i class="fas fa-cogs me-2"></i>
+                                Panel Avanzado
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Backups Recientes -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history me-2"></i>
+                        Backups Recientes
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_backups %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Archivo</th>
+                                    <th>Tipo</th>
+                                    <th>Fecha</th>
+                                    <th>Tamaño</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for backup in recent_backups %}
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-file-archive me-2 text-muted"></i>
+                                        {{ backup.name }}
+                                    </td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if backup.type == 'daily' %}bg-primary
+                                            {% elif backup.type == 'weekly' %}bg-info
+                                            {% elif backup.type == 'monthly' %}bg-success
+                                            {% else %}bg-secondary{% endif %}">
+                                            {% if backup.type == 'daily' %}Diario
+                                            {% elif backup.type == 'weekly' %}Semanal
+                                            {% elif backup.type == 'monthly' %}Mensual
+                                            {% else %}Manual{% endif %}
+                                        </span>
+                                    </td>
+                                    <td>{{ backup.date.strftime('%d/%m/%Y %H:%M') }}</td>
+                                    <td>{{ "%.1f"|format(backup.size / (1024*1024)) }} MB</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ url_for('admin_download_backup', backup_file=backup.path) }}" 
+                                               class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-outline-warning btn-sm" 
+                                                    onclick="selectBackupForRestore('{{ backup.path }}', '{{ backup.name }}')">
+                                                <i class="fas fa-undo"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No hay backups disponibles</h5>
+                        <p class="text-muted">Ejecuta tu primer backup usando los botones de arriba</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Restauración -->
+<div class="modal fade" id="restoreModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-undo me-2"></i>
+                    Restaurar Backup
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('admin_restore_backup') }}">
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Advertencia:</strong> La restauración reemplazará los datos actuales. 
+                        Se creará un backup automático antes de proceder.
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="backup_file" class="form-label">Seleccionar Backup:</label>
+                        <select class="form-select" id="backup_file" name="backup_file" required>
+                            <option value="">Selecciona un archivo...</option>
+                            {% for backup in recent_backups %}
+                            <option value="{{ backup.path }}">
+                                {{ backup.name }} ({{ backup.date.strftime('%d/%m/%Y %H:%M') }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-undo me-2"></i>
+                        Restaurar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function selectBackupForRestore(path, name) {
+    document.getElementById('backup_file').value = path;
+    new bootstrap.Modal(document.getElementById('restoreModal')).show();
+}
+
+// Auto-refresh del estado cada 30 segundos
+setInterval(function() {
+    fetch('{{ url_for("admin_backup_status") }}')
+        .then(response => response.json())
+        .then(data => {
+            // Actualizar badges de estado si es necesario
+            console.log('Estado actualizado:', data);
+        })
+        .catch(error => console.log('Error actualizando estado:', error));
+}, 30000);
+</script>
+{% endblock %}

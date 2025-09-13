@@ -1,0 +1,12 @@
+2025-09-12 23:21:42,088 - INFO - Iniciando backup manual: backup_manual_20250912_232142
+2025-09-12 23:21:42,088 - WARNING - Base de datos no encontrada: C:\Users\Diego\Desktop\Pagina Web Autos\vehicle_marketplace.db
+2025-09-12 23:21:42,118 - INFO - Backup de uploads completado: backups\backup_manual_20250912_232142\uploads_backup
+2025-09-12 23:21:42,119 - INFO - Archivo de configuración respaldado: app.py
+2025-09-12 23:21:42,120 - INFO - Archivo de configuración respaldado: models.py
+2025-09-12 23:21:42,121 - INFO - Archivo de configuración respaldado: routes.py
+2025-09-12 23:21:42,121 - INFO - Archivo de configuración respaldado: requirements.txt
+2025-09-12 23:21:42,122 - INFO - Archivo de configuración respaldado: pyproject.toml
+2025-09-12 23:21:42,123 - INFO - Archivo de configuración respaldado: config_local.py
+2025-09-12 23:21:42,334 - INFO - Archivo de backup creado: backups\backup_manual_20250912_232142.zip
+2025-09-12 23:21:42,334 - INFO - Manifiesto creado: backups\backup_manual_20250912_232142_manifest.json
+2025-09-12 23:21:42,335 - ERROR - Backup manual completado con errores: ['Error en backup de base de datos']

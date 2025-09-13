@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "marketplace-vehiculos"
+version = "1.0.0"
+description = "Marketplace de vehículos Valle de Uco"
+authors = [{name = "Admin", email = "admin@valledeuco.com"}]
+dependencies = [
+    "Flask>=2.3.0",
+    "Flask-SQLAlchemy>=3.0.0",
+    "Werkzeug>=2.3.0",
+    "gunicorn>=21.0.0",
+    "Pillow>=10.0.0",
+    "python-dotenv>=1.0.0",
+    "psycopg2-binary>=2.9.0",
+    "reportlab>=4.0.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/usuario/marketplace-vehiculos"

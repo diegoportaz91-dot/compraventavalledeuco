@@ -1,0 +1,7 @@
+2025-09-12 23:30:20,326 - INFO - Iniciando verificación de salud del sistema de backup
+2025-09-12 23:30:20,332 - WARNING - Error leyendo log backup_system.log: 'utf-8' codec can't decode byte 0xf3 in position 390: invalid continuation byte
+2025-09-12 23:30:20,332 - WARNING - Error leyendo log backup_scheduler.log: 'utf-8' codec can't decode byte 0xed in position 694: invalid continuation byte
+2025-09-12 23:30:53,131 - INFO - Iniciando verificación de salud del sistema de backup
+2025-09-12 23:30:53,135 - WARNING - Error leyendo log backup_system.log: 'utf-8' codec can't decode byte 0xf3 in position 390: invalid continuation byte
+2025-09-12 23:30:53,135 - WARNING - Error leyendo log backup_scheduler.log: 'utf-8' codec can't decode byte 0xed in position 694: invalid continuation byte
+2025-09-12 23:30:53,184 - INFO - Verificación completada. Estado: healthy

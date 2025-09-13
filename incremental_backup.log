@@ -1,0 +1,63 @@
+2025-09-12 23:31:22,341 - INFO - Ejecutando backup completo
+2025-09-12 23:31:22,341 - INFO - Creando backup completo: full_backup_20250912_233122
+2025-09-12 23:31:22,593 - INFO - Backup completo creado: backups\incremental\full_backup_20250912_233122.zip
+2025-09-12 23:37:46,722 - INFO - Ejecutando backup incremental
+2025-09-12 23:37:46,722 - INFO - Creando backup incremental: incremental_backup_20250912_233746
+2025-09-12 23:37:46,738 - INFO - Backup incremental creado: backups\incremental\incremental_backup_20250912_233746.zip
+2025-09-12 23:37:46,901 - INFO - Ejecutando backup incremental
+2025-09-12 23:37:46,901 - INFO - Creando backup incremental: incremental_backup_20250912_233746
+2025-09-12 23:37:46,914 - INFO - No hay cambios para backup incremental
+2025-09-12 23:47:29,100 - INFO - Ejecutando backup completo
+2025-09-12 23:47:29,100 - INFO - Creando backup completo: full_backup_20250912_234729
+2025-09-12 23:47:29,102 - INFO - Backup completo creado: backups\incremental\full_backup_20250912_234729.zip
+2025-09-12 23:47:29,212 - INFO - Ejecutando backup incremental
+2025-09-12 23:47:29,212 - INFO - Creando backup incremental: incremental_backup_20250912_234729
+2025-09-12 23:47:29,213 - INFO - No hay cambios para backup incremental
+2025-09-12 23:47:54,770 - INFO - Ejecutando backup incremental
+2025-09-12 23:47:54,770 - INFO - Creando backup incremental: incremental_backup_20250912_234754
+2025-09-12 23:47:54,770 - INFO - No hay cambios para backup incremental
+2025-09-12 23:47:54,885 - INFO - Ejecutando backup incremental
+2025-09-12 23:47:54,886 - INFO - Creando backup incremental: incremental_backup_20250912_234754
+2025-09-12 23:47:54,886 - INFO - No hay cambios para backup incremental
+2025-09-12 23:48:23,900 - INFO - Ejecutando backup incremental
+2025-09-12 23:48:23,900 - INFO - Creando backup incremental: incremental_backup_20250912_234823
+2025-09-12 23:48:23,900 - INFO - No hay cambios para backup incremental
+2025-09-12 23:48:24,373 - INFO - Ejecutando backup incremental
+2025-09-12 23:48:24,373 - INFO - Creando backup incremental: incremental_backup_20250912_234824
+2025-09-12 23:48:24,374 - INFO - No hay cambios para backup incremental
+2025-09-12 23:48:45,777 - INFO - Ejecutando backup incremental
+2025-09-12 23:48:45,777 - INFO - Creando backup incremental: incremental_backup_20250912_234845
+2025-09-12 23:48:45,778 - INFO - No hay cambios para backup incremental
+2025-09-12 23:48:45,879 - INFO - Ejecutando backup incremental
+2025-09-12 23:48:45,879 - INFO - Creando backup incremental: incremental_backup_20250912_234845
+2025-09-12 23:48:45,880 - INFO - No hay cambios para backup incremental
+2025-09-12 23:51:57,220 - INFO - Ejecutando backup incremental
+2025-09-12 23:51:57,220 - INFO - Creando backup incremental: incremental_backup_20250912_235157
+2025-09-12 23:51:57,220 - INFO - No hay cambios para backup incremental
+2025-09-12 23:52:21,456 - INFO - Ejecutando backup incremental
+2025-09-12 23:52:21,456 - INFO - Creando backup incremental: incremental_backup_20250912_235221
+2025-09-12 23:52:21,456 - INFO - No hay cambios para backup incremental
+2025-09-12 23:52:21,580 - INFO - Ejecutando backup incremental
+2025-09-12 23:52:21,581 - INFO - Creando backup incremental: incremental_backup_20250912_235221
+2025-09-12 23:52:21,581 - INFO - No hay cambios para backup incremental
+2025-09-12 23:53:59,409 - INFO - Ejecutando backup incremental
+2025-09-12 23:53:59,409 - INFO - Creando backup incremental: incremental_backup_20250912_235359
+2025-09-12 23:53:59,410 - INFO - No hay cambios para backup incremental
+2025-09-12 23:53:59,519 - INFO - Ejecutando backup incremental
+2025-09-12 23:53:59,519 - INFO - Creando backup incremental: incremental_backup_20250912_235359
+2025-09-12 23:53:59,519 - INFO - No hay cambios para backup incremental
+2025-09-12 23:55:10,465 - INFO - Ejecutando backup incremental
+2025-09-12 23:55:10,466 - INFO - Creando backup incremental: incremental_backup_20250912_235510
+2025-09-12 23:55:10,466 - INFO - No hay cambios para backup incremental
+2025-09-12 23:55:10,991 - INFO - Ejecutando backup incremental
+2025-09-12 23:55:10,991 - INFO - Creando backup incremental: incremental_backup_20250912_235510
+2025-09-12 23:55:10,992 - INFO - No hay cambios para backup incremental
+2025-09-12 23:57:34,040 - INFO - Ejecutando backup incremental
+2025-09-12 23:57:34,041 - INFO - Creando backup incremental: incremental_backup_20250912_235734
+2025-09-12 23:57:34,041 - INFO - No hay cambios para backup incremental
+2025-09-12 23:57:44,685 - INFO - Ejecutando backup incremental
+2025-09-12 23:57:44,685 - INFO - Creando backup incremental: incremental_backup_20250912_235744
+2025-09-12 23:57:44,685 - INFO - No hay cambios para backup incremental
+2025-09-12 23:57:56,319 - INFO - Ejecutando backup incremental
+2025-09-12 23:57:56,320 - INFO - Creando backup incremental: incremental_backup_20250912_235756
+2025-09-12 23:57:56,320 - INFO - No hay cambios para backup incremental

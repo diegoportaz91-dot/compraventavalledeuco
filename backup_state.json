@@ -1,0 +1,9 @@
+{
+    "last_full_backup": "2025-09-12T23:47:29.100682",
+    "last_incremental_backup": null,
+    "file_hashes": {},
+    "incremental_count": 0,
+    "backup_chain": [
+        "backups\\incremental\\full_backup_20250912_234729.zip"
+    ]
+}

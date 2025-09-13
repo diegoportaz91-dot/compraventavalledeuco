@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Gestor - Panel Administrativo{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+    {% include 'admin_sidebar.html' %}
+    
+    <div class="admin-content">
+        <div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-6 fw-bold">
+                        <i class="fas fa-edit me-3 text-primary"></i>Editar Gestor
+                    </h1>
+                    <p class="text-muted">Modificar información de {{ gestor.name }}</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('admin_gestores') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Volver a Gestores
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-edit me-2"></i>Información del Gestor
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
+                        <div class="row">
+                            <!-- Nombre -->
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Nombre Completo *</label>
+                                <input type="text" class="form-control" id="name" name="name" 
+                                       value="{{ gestor.name }}" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa el nombre completo.
+                                </div>
+                            </div>
+
+                            <!-- Empresa -->
+                            <div class="col-md-6 mb-3">
+                                <label for="business_name" class="form-label">Nombre de la Empresa</label>
+                                <input type="text" class="form-control" id="business_name" name="business_name"
+                                       value="{{ gestor.business_name or '' }}">
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div class="col-md-6 mb-3">
+                                <label for="phone_number" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="phone_number" name="phone_number"
+                                       value="{{ gestor.phone_number or '' }}">
+                            </div>
+
+                            <!-- WhatsApp -->
+                            <div class="col-md-6 mb-3">
+                                <label for="whatsapp_number" class="form-label">WhatsApp</label>
+                                <input type="tel" class="form-control" id="whatsapp_number" name="whatsapp_number"
+                                       value="{{ gestor.whatsapp_number or '' }}">
+                                <div class="form-text">Formato: 542622581554 (sin +)</div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                       value="{{ gestor.email or '' }}">
+                            </div>
+
+                            <!-- Ubicación -->
+                            <div class="col-md-6 mb-3">
+                                <label for="location" class="form-label">Ubicación</label>
+                                <input type="text" class="form-control" id="location" name="location" 
+                                       value="{{ gestor.location or '' }}"
+                                       placeholder="Ej: Tupungato, Mendoza">
+                            </div>
+
+                            <!-- Años de experiencia -->
+                            <div class="col-md-6 mb-3">
+                                <label for="years_experience" class="form-label">Años de Experiencia</label>
+                                <input type="number" class="form-control" id="years_experience" name="years_experience" 
+                                       value="{{ gestor.years_experience or '' }}"
+                                       min="0" max="50">
+                            </div>
+
+                            <!-- Imagen del gestor -->
+                            <div class="col-md-6 mb-3">
+                                <label for="image" class="form-label">Imagen del Gestor</label>
+                                {% if gestor.image_filename %}
+                                    <div class="mb-2">
+                                        <img src="{{ gestor.get_image_url() }}" alt="Imagen actual" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+                                        <small class="text-muted d-block">Imagen actual</small>
+                                    </div>
+                                {% endif %}
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                                <div class="form-text">Selecciona una nueva imagen para reemplazar la actual (JPG, PNG, etc.)</div>
+                            </div>
+
+                            <!-- Especialidades -->
+                            <div class="col-12 mb-3">
+                                <label for="specializations" class="form-label">Especialidades</label>
+                                <input type="text" class="form-control" id="specializations" name="specializations"
+                                       value="{{ gestor.specializations or '' }}"
+                                       placeholder="Ej: Autos usados, Camionetas, Financiación">
+                                <div class="form-text">Separar con comas</div>
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="col-12 mb-3">
+                                <label for="description" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="description" name="description" rows="4"
+                                          placeholder="Descripción del gestor y sus servicios...">{{ gestor.description or '' }}</textarea>
+                            </div>
+
+                            <!-- Estado activo -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="is_active" name="is_active"
+                                           {% if gestor.is_active %}checked{% endif %}>
+                                    <label class="form-check-label" for="is_active">
+                                        <strong>Gestor Activo</strong>
+                                        <small class="text-muted d-block">Solo los gestores activos aparecen en el sitio</small>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Destacado -->
+                            <div class="col-md-6 mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured"
+                                           {% if gestor.is_featured %}checked{% endif %}>
+                                    <label class="form-check-label" for="is_featured">
+                                        <strong>Marcar como Destacado</strong>
+                                        <small class="text-muted d-block">Los gestores destacados aparecen primero en la lista</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ url_for('admin_gestores') }}" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Actualizar Gestor
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Bootstrap form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
+        </div>
+    </div>
+</div>
+{% endblock %}

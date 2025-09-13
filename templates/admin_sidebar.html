@@ -1,0 +1,102 @@
+<!-- Admin Sidebar Navigation -->
+<div class="admin-sidebar bg-dark text-white">
+    <div class="sidebar-header p-3 border-bottom border-secondary">
+        <h5 class="mb-0">
+            <i class="fas fa-shield-alt me-2 text-warning"></i>
+            Panel Admin
+        </h5>
+    </div>
+    
+    <nav class="sidebar-nav">
+        <ul class="nav flex-column">
+            <!-- Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'admin_dashboard' %}active{% endif %}" 
+                   href="{{ url_for('admin_dashboard') }}">
+                    <i class="fas fa-tachometer-alt me-2"></i>
+                    Dashboard
+                </a>
+            </li>
+            
+            <!-- Vehículos -->
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'client_request' %}active{% endif %}" 
+                   href="{{ url_for('client_request') }}">
+                    <i class="fas fa-plus-circle me-2"></i>
+                    Agregar Vehículo
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'admin_users_vehicles' %}active{% endif %}" 
+                   href="{{ url_for('admin_users_vehicles') }}">
+                    <i class="fas fa-car me-2"></i>
+                    Usuarios y Vehículos
+                </a>
+            </li>
+            
+            <!-- Solicitudes -->
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'admin_pending_requests' %}active{% endif %}" 
+                   href="{{ url_for('admin_pending_requests') }}">
+                    <i class="fas fa-clock me-2"></i>
+                    Solicitudes Pendientes
+                    {% if stats and stats.pending_requests_count > 0 %}
+                    <span class="badge bg-danger ms-2">{{ stats.pending_requests_count }}</span>
+                    {% endif %}
+                </a>
+            </li>
+            
+            <!-- Gestores -->
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'admin_gestores' %}active{% endif %}" 
+                   href="{{ url_for('admin_gestores') }}">
+                    <i class="fas fa-users me-2"></i>
+                    Gestores
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'admin_add_gestor' %}active{% endif %}" 
+                   href="{{ url_for('admin_add_gestor') }}">
+                    <i class="fas fa-user-plus me-2"></i>
+                    Agregar Gestor
+                </a>
+            </li>
+            
+            <!-- Sistema de Backup -->
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'admin_backup_dashboard' %}active{% endif %}" 
+                   href="{{ url_for('admin_backup_dashboard') }}">
+                    <i class="fas fa-shield-alt me-2"></i>
+                    Sistema de Backup
+                    {% if backup_status == 'healthy' %}
+                    <span class="badge bg-success ms-2">OK</span>
+                    {% elif backup_status == 'warning' %}
+                    <span class="badge bg-warning ms-2">!</span>
+                    {% elif backup_status == 'critical' %}
+                    <span class="badge bg-danger ms-2">!</span>
+                    {% endif %}
+                </a>
+            </li>
+            
+            <!-- Separador -->
+            <li class="nav-divider"></li>
+            
+            <!-- Navegación -->
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}">
+                    <i class="fas fa-home me-2"></i>
+                    Ver Sitio Web
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link text-danger" href="{{ url_for('logout') }}">
+                    <i class="fas fa-sign-out-alt me-2"></i>
+                    Cerrar Sesión
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

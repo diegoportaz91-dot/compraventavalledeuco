@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Términos y Condiciones - AutoMarket Argentina{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0">
+                        <i class="fas fa-file-contract me-2"></i>Términos y Condiciones
+                    </h1>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <p class="text-muted">
+                            <strong>Última actualización:</strong> {{ now.strftime('%d/%m/%Y') }}
+                        </p>
+                    </div>
+
+                    <h2 class="h4 text-primary mb-3">1. Aceptación de los Términos</h2>
+                    <p>
+                        Al utilizar AutoMarket Argentina, usted acepta estos términos y condiciones. 
+                        Si no está de acuerdo con alguna parte de estos términos, no debe utilizar nuestros servicios.
+                    </p>
+
+                    <h2 class="h4 text-primary mb-3">2. Descripción del Servicio</h2>
+                    <p>
+                        AutoMarket Argentina es una plataforma digital que facilita la conexión entre compradores 
+                        y vendedores de vehículos en la región del Valle de Uco (Tupungato, Tunuyán y San Carlos). 
+                        Actuamos únicamente como intermediarios en la publicación de anuncios.
+                    </p>
+
+                    <h2 class="h4 text-primary mb-3">3. Limitación de Responsabilidad</h2>
+                    <p>
+                        <strong>AutoMarket Argentina NO se hace responsable por:</strong>
+                    </p>
+                    <ul>
+                        <li>La veracidad de la información proporcionada por los usuarios</li>
+                        <li>El estado real de los vehículos anunciados</li>
+                        <li>Problemas derivados de transacciones entre compradores y vendedores</li>
+                        <li>Defectos ocultos o no declarados en los vehículos</li>
+                        <li>Documentación incompleta o irregular de los vehículos</li>
+                        <li>Problemas legales relacionados con la propiedad de los vehículos</li>
+                        <li>Fraudes o estafas entre usuarios</li>
+                        <li>Daños materiales o económicos resultantes de las transacciones</li>
+                    </ul>
+
+                    <h2 class="h4 text-primary mb-3">4. Responsabilidades del Usuario</h2>
+                    <p>
+                        Los usuarios son completamente responsables de:
+                    </p>
+                    <ul>
+                        <li>Verificar la información del vehículo antes de realizar cualquier transacción</li>
+                        <li>Inspeccionar físicamente el vehículo antes de la compra</li>
+                        <li>Verificar la documentación legal del vehículo</li>
+                        <li>Realizar las verificaciones necesarias con organismos oficiales</li>
+                        <li>Tomar todas las precauciones necesarias para evitar fraudes</li>
+                        <li>Resolver directamente cualquier disputa con el otro usuario</li>
+                    </ul>
+
+                    <h2 class="h4 text-primary mb-3">5. Publicaciones</h2>
+                    <p>
+                        Las publicaciones en nuestra plataforma son responsabilidad exclusiva del anunciante. 
+                        AutoMarket Argentina se reserva el derecho de:
+                    </p>
+                    <ul>
+                        <li>Modificar o eliminar publicaciones que no cumplan con nuestras políticas</li>
+                        <li>Rechazar publicaciones sin previo aviso</li>
+                        <li>Suspender cuentas que violen estos términos</li>
+                    </ul>
+
+                    <h2 class="h4 text-primary mb-3">6. Exención de Garantías</h2>
+                    <p>
+                        AutoMarket Argentina proporciona sus servicios "tal como están" sin garantías de ningún tipo. 
+                        No garantizamos que:
+                    </p>
+                    <ul>
+                        <li>Los servicios estarán disponibles de manera ininterrumpida</li>
+                        <li>Los vehículos anunciados cumplan con las especificaciones declaradas</li>
+                        <li>Las transacciones entre usuarios sean exitosas</li>
+                        <li>No existan errores en la información proporcionada</li>
+                    </ul>
+
+                    <h2 class="h4 text-primary mb-3">7. Modificaciones</h2>
+                    <p>
+                        Nos reservamos el derecho de modificar estos términos y condiciones en cualquier momento. 
+                        Las modificaciones entrarán en vigor inmediatamente después de su publicación en la plataforma.
+                    </p>
+
+                    <h2 class="h4 text-primary mb-3">8. Ley Aplicable</h2>
+                    <p>
+                        Estos términos se rigen por las leyes de la República Argentina. 
+                        Cualquier disputa será resuelta en los tribunales competentes de la provincia de Mendoza.
+                    </p>
+
+                    <h2 class="h4 text-primary mb-3">9. Contacto</h2>
+                    <p>
+                        Para consultas sobre estos términos y condiciones, puede contactarnos a través de:
+                    </p>
+                    <ul>
+                        <li><strong>WhatsApp:</strong> +54 260 437 0925</li>
+                        <li><strong>Email:</strong> compraventa.vuco@gmail.com</li>
+                    </ul>
+
+                    <div class="alert alert-warning mt-4">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Importante
+                        </h5>
+                        <p class="mb-0">
+                            Al utilizar AutoMarket Argentina, usted reconoce haber leído, entendido y aceptado 
+                            estos términos y condiciones. Es su responsabilidad revisar periódicamente estos términos 
+                            para estar informado de cualquier cambio.
+                        </p>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="{{ url_for('index') }}" class="btn btn-primary">
+                            <i class="fas fa-home me-2"></i>Volver al Inicio
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

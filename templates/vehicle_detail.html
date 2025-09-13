@@ -1,0 +1,388 @@
+{% extends "base.html" %}
+
+{% block title %}{{ vehicle.title }} - AutoMarket Argentina{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('index') }}">
+                    <i class="fas fa-home me-1"></i>Inicio
+                </a>
+            </li>
+            <li class="breadcrumb-item active">{{ vehicle.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Image Gallery -->
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body p-0">
+                    <!-- Unified image handling for both free and plus plans -->
+                    {% set images = vehicle.get_images_list() %}
+                    {% if images %}
+                        <div id="vehicleCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                {% for image in images %}
+                                    <button type="button" data-bs-target="#vehicleCarousel" 
+                                            data-bs-slide-to="{{ loop.index0 }}" 
+                                            class="{% if loop.first %}active{% endif %}"></button>
+                                {% endfor %}
+                            </div>
+                            <div class="carousel-inner">
+                                {% for image in images %}
+                                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                        <img src="{{ image }}" class="d-block w-100 vehicle-detail-image lightbox-trigger" 
+                                             alt="{{ vehicle.title }}"
+                                             data-bs-toggle="modal" 
+                                             data-bs-target="#imageModal"
+                                             data-image="{{ image }}"
+                                             style="cursor: pointer;"
+                                             onerror="handleImageError(this)">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% if images|length > 1 %}
+                                <button class="carousel-control-prev" type="button" data-bs-target="#vehicleCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon"></span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#vehicleCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon"></span>
+                                </button>
+                            {% endif %}
+                        </div>
+                        <!-- Plan badge -->
+                        {% if not vehicle.is_plus %}
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-success fs-6">
+                                    <i class="fas fa-tag me-1"></i>Gratuita
+                                </span>
+                            </div>
+                        {% else %}
+                            <div class="vehicle-plus-badge">
+                                <i class="fas fa-star me-1"></i>Plus
+                            </div>
+                            
+                            <!-- Department badge for plus vehicles -->
+                            <div class="vehicle-department-badge {{ vehicle.get_location().lower().replace(' ', '-') }}">
+                                <i class="fas fa-map-marker-alt me-1"></i>{{ vehicle.get_location() }}
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <!-- No images uploaded, show placeholder -->
+                        <div class="position-relative">
+                            <img src="{{ url_for('static', filename='placeholder-car.png') }}" 
+                                 class="w-100 vehicle-detail-image" 
+                                 alt="{{ vehicle.title }}"
+                                 style="object-fit: contain; background-color: #f8f9fa; height: 400px;">
+                            
+                            <!-- Plan badge -->
+                            {% if not vehicle.is_plus %}
+                                <div class="position-absolute top-0 end-0 m-3">
+                                    <span class="badge bg-success fs-6">
+                                        <i class="fas fa-tag me-1"></i>Gratuita
+                                    </span>
+                                </div>
+                            {% else %}
+                                <div class="vehicle-plus-badge">
+                                    <i class="fas fa-star me-1"></i>Plus
+                                </div>
+                                
+                                <!-- Department badge for plus vehicles -->
+                                <div class="vehicle-department-badge {{ vehicle.get_location().lower().replace(' ', '-') }}">
+                                    <i class="fas fa-map-marker-alt me-1"></i>{{ vehicle.get_location() }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Vehicle Specifications -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cog me-2"></i>Especificaciones
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="spec-item">
+                        {% if vehicle.year %}
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <i class="fas fa-calendar text-muted me-2"></i>
+                                    <strong>Año:</strong>
+                                </div>
+                                <div class="col-6">{{ vehicle.year }}</div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if vehicle.brand %}
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <i class="fas fa-tag text-muted me-2"></i>
+                                    <strong>Marca:</strong>
+                                </div>
+                                <div class="col-6">{{ vehicle.brand }}</div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if vehicle.model %}
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <i class="fas fa-car text-muted me-2"></i>
+                                    <strong>Modelo:</strong>
+                                </div>
+                                <div class="col-6">{{ vehicle.model }}</div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if vehicle.kilometers %}
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <i class="fas fa-road text-muted me-2"></i>
+                                    <strong>Kilómetros:</strong>
+                                </div>
+                                <div class="col-6">{{ "{:,}".format(vehicle.kilometers).replace(",", ".") }} km</div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if vehicle.fuel_type %}
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <i class="fas fa-gas-pump text-muted me-2"></i>
+                                    <strong>Combustible:</strong>
+                                </div>
+                                <div class="col-6">{{ vehicle.fuel_type }}</div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if vehicle.transmission %}
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <i class="fas fa-cogs text-muted me-2"></i>
+                                    <strong>Transmisión:</strong>
+                                </div>
+                                <div class="col-6">{{ vehicle.transmission }}</div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if vehicle.color %}
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <i class="fas fa-palette text-muted me-2"></i>
+                                    <strong>Color:</strong>
+                                </div>
+                                <div class="col-6">{{ vehicle.color }}</div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if vehicle.tire_condition and vehicle.is_plus %}
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <i class="fas fa-circle text-muted me-2"></i>
+                                    <strong>Estado de Cubiertas:</strong>
+                                </div>
+                                <div class="col-6">
+                                    <span class="{{ vehicle.get_tire_condition_class() }}">
+                                        <i class="fas fa-circle me-1"></i>{{ vehicle.get_tire_condition_display() }}
+                                    </span>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Descripción
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ vehicle.description }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicle Info & Actions -->
+        <div class="col-lg-4">
+            <!-- Vehicle Title & Price -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h1 class="h3 fw-bold mb-3">{{ vehicle.title }}</h1>
+                    <div class="price-display {{ vehicle.get_currency_class() }} fw-bold mb-3">
+                        {{ vehicle.format_price_with_currency() }}
+                    </div>
+                    
+                    
+                    <!-- Dynamic Contact Buttons -->
+                    <div class="d-grid gap-2 mb-4">
+                        {% set contact_buttons = vehicle.get_contact_buttons() %}
+                        {% if contact_buttons|length == 1 %}
+                            {% for button in contact_buttons %}
+                                {% if button.type == 'whatsapp' %}
+                                    <a href="https://wa.me/{{ button.number }}?text={{ vehicle.get_whatsapp_contact_message()|urlencode }}" 
+                                       class="btn {{ button.class }} btn-lg"
+                                       target="_blank">
+                                        <i class="{{ button.icon }} me-2"></i>{{ button.text }}
+                                    </a>
+                                {% else %}
+                                    <a href="tel:{{ button.number }}" 
+                                       class="btn {{ button.class }} btn-lg"
+                                       onclick="trackCallClick('{{ vehicle.id }}')">
+                                        <i class="{{ button.icon }} me-2"></i>{{ button.text }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        {% elif contact_buttons|length == 2 %}
+                            <div class="row g-2">
+                                {% for button in contact_buttons %}
+                                    <div class="col-6">
+                                        {% if button.type == 'whatsapp' %}
+                                            <a href="https://wa.me/{{ button.number }}?text={{ vehicle.get_whatsapp_contact_message()|urlencode }}" 
+                                               class="btn {{ button.class }} w-100"
+                                               target="_blank">
+                                                <i class="{{ button.icon }} me-2"></i>{{ button.text }}
+                                            </a>
+                                        {% else %}
+                                            <a href="tel:{{ button.number }}" 
+                                               class="btn {{ button.class }} w-100"
+                                               onclick="trackCallClick('{{ vehicle.id }}')">
+                                                <i class="{{ button.icon }} me-2"></i>{{ button.text }}
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-warning text-center">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Sin información de contacto disponible
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Safety & Trust Badges -->
+            <div class="card mt-4">
+                <div class="card-body text-center">
+                    <h6 class="fw-bold mb-3">
+                        <i class="fas fa-shield-alt text-success me-2"></i>Garantía de Confianza
+                    </h6>
+                    <div class="row g-2">
+                        <div class="col-4">
+                            <i class="fas fa-check-circle text-success mb-1"></i>
+                            <small class="d-block">Verificado</small>
+                        </div>
+                        <div class="col-4">
+                            <i class="fas fa-handshake text-success mb-1"></i>
+                            <small class="d-block">Confiable</small>
+                        </div>
+                        <div class="col-4">
+                            <i class="fas fa-headset text-success mb-1"></i>
+                            <small class="d-block">Soporte</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Vehicles Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4">
+                <i class="fas fa-car me-2 text-primary"></i>Otros Vehículos que Te Pueden Interesar
+            </h3>
+            <div class="text-center py-4">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Ver Todos los Vehículos
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Image Lightbox Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img id="lightboxImage" src="" class="img-fluid" style="max-height: 90vh; object-fit: contain;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Handle image loading errors
+function handleImageError(img) {
+    img.src = "{{ url_for('static', filename='placeholder-car.png') }}";
+}
+
+// Lightbox functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const lightboxTriggers = document.querySelectorAll('.lightbox-trigger');
+    const lightboxImage = document.getElementById('lightboxImage');
+    
+    lightboxTriggers.forEach(trigger => {
+        trigger.addEventListener('click', function() {
+            const imageSrc = this.getAttribute('data-image');
+            lightboxImage.src = imageSrc;
+        });
+    });
+    
+    // Share profile functionality
+    const shareBtn = document.getElementById('shareProfileBtn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', function() {
+            const url = this.getAttribute('data-url');
+            const title = this.getAttribute('data-title');
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    url: url
+                }).catch(console.error);
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(url).then(function() {
+                    // Show temporary notification
+                    const originalText = shareBtn.innerHTML;
+                    shareBtn.innerHTML = '<i class="fas fa-check me-2"></i>¡Copiado!';
+                    shareBtn.classList.remove('btn-primary');
+                    shareBtn.classList.add('btn-success');
+                    
+                    setTimeout(function() {
+                        shareBtn.innerHTML = originalText;
+                        shareBtn.classList.remove('btn-success');
+                        shareBtn.classList.add('btn-primary');
+                    }, 2000);
+                }).catch(function() {
+                    alert('URL del perfil: ' + url + String.fromCharCode(10) + String.fromCharCode(10) + 'Copia este enlace para compartir.');
+                });
+            }
+        });
+    }
+    
+    // Track call clicks
+    function trackCallClick(vehicleId) {
+        fetch('/track_click/' + vehicleId + '/call', {
+            method: 'GET',
+        }).catch(console.error);
+    }
+});
+</script>
+{% endblock %}
